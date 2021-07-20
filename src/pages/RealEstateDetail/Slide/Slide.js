@@ -1,27 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
+const TOTAL_SLIDES = 2;
+
 function Slide() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideRef = useRef(null);
+  const nextSlide = () => {
+    if (currentSlide >= TOTAL_SLIDES) {
+      // 더 이상 넘어갈 슬라이드가 없으면 슬라이드를 초기화합니다.
+      setCurrentSlide(0);
+    } else {
+      setCurrentSlide(currentSlide + 1);
+    }
+    console.log(currentSlide);
+  };
+  const prevSlide = () => {
+    if (currentSlide === 0) {
+      setCurrentSlide(TOTAL_SLIDES);
+    } else {
+      setCurrentSlide(currentSlide - 1);
+    }
+    console.log(currentSlide);
+  };
+  useEffect(() => {
+    slideRef.current.style.transition = 'all 0.5s ease-in-out';
+    slideRef.current.style.transform = `translateX(-${currentSlide * 100}vw)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
+  }, [currentSlide]);
+
   return (
     <CarouselContainer>
       <div className="carusel-dim"></div>
-      <div className="carousel-slide">
-        <ul>
-          <li>
-            <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-          </li>
-          <li>
-            <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-          </li>
-          <li>
-            <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-          </li>
-        </ul>
+      <div className="carousel">
+        <div className="carousel-slide">
+          <ul ref={slideRef}>
+            <li>
+              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
+            </li>
+            <li>
+              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
+            </li>
+            <li>
+              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="carusel-dim"></div>
-      <CarouselPage>1/3</CarouselPage>
+      <CarouselPage>{currentSlide + 1} / 3</CarouselPage>
       <CaruselBtnWrap>
-        <button className="carousel-control left-btn">
+        <button className="carousel-control left-btn" onClick={prevSlide}>
           <svg
             data-v-1b48df72=""
             data-v-33ca715b=""
@@ -39,7 +67,7 @@ function Slide() {
             </g>
           </svg>
         </button>
-        <button className="carousel-control right-btn">
+        <button className="carousel-control right-btn" onClick={nextSlide}>
           <svg
             data-v-1b48df72=""
             data-v-33ca715b=""
@@ -69,6 +97,12 @@ const CarouselContainer = styled.div`
   overflow: hidden;
   display: flex;
   position: relative;
+  .carousel {
+    max-width: 1095px;
+    display: flex;
+    height: 360px;
+    overflow: visible;
+  }
 
   .carousel-dim {
     flex: 1 0 0;
@@ -77,11 +111,21 @@ const CarouselContainer = styled.div`
   }
 
   .carousel-slide {
+    flex: 0 1 100%;
     overflow: visible;
 
-    ul li img {
-      width: 100%;
-      height: 100%;
+    ul {
+      display: flex;
+      transform: translateX();
+
+      li {
+        width: 100vw;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
 `;
