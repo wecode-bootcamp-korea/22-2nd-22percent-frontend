@@ -8,5 +8,4 @@ const theme = {
   justify-content: ${justify};
   align-items: ${align}`,
 };
-
 export default theme;

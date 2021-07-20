@@ -2,10 +2,18 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
-  ${reset}
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-  }
+   ${reset}
+   * {
+      box-sizing: border-box;
+      font-family: 'Noto Sans KR', sans-serif;
+   }
+   a {
+      color: inherit;
+      text-decoration: none;
+   }
+   button:focus {
+      outline: none;
+   }
 `;
 
 export default GlobalStyle;
