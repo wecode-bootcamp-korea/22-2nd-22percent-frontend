@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import IndividualFilterBar from './IndividualFilterBar/IndividualFilterBar';
+import StyledCheckBox from '../../../components/StyledCheckBox/StyledCheckBox';
 
 import { GRADE_BAR_RANGE, EARNING_BAR_RANGE } from './filterRange';
 
-function IndividualFilter({ isFilterOn, setIsFilterOn }) {
+const GRADE_MAX_VALUE = GRADE_BAR_RANGE.length - 1;
+const PERCENT_MAX_VALUE = EARNING_BAR_RANGE.length - 1;
+
+function IndividualFilter({
+  isFilterOn,
+  setIsFilterOn,
+  handleFilter,
+  isPurposeChecked,
+  setIsPurposeChecked,
+}) {
   const handleClose = () => {
     setIsFilterOn(false);
-  };
-
-  const handleDragStart = e => {
-    console.log(e.nativeEvent.offsetX);
-  };
-
-  const handleDragEnd = e => {
-    console.log(e.nativeEvent.offsetX);
-    const unit = 370 / 12;
-    const destination = e.nativeEvent.offsetX / unit;
-    console.log(destination);
-    // if(e.nativeEvent.offsetX)
   };
 
   return (
@@ -29,21 +27,34 @@ function IndividualFilter({ isFilterOn, setIsFilterOn }) {
         <ul>
           <List purpose>
             <ListTitle>대출목적</ListTitle>
-            <ListContent>
-              <input type="checkbox"></input>
+            <ListContent purpose>
+              <CheckBoxContainer>
+                <StyledCheckBox
+                  isChecked={isPurposeChecked}
+                  setIsPurposeChecked={setIsPurposeChecked}
+                />
+              </CheckBoxContainer>
               대환대출
             </ListContent>
           </List>
           <List>
             <ListTitle>등급</ListTitle>
             <ListContent>
-              <IndividualFilterBar grade range={GRADE_BAR_RANGE} />
+              <IndividualFilterBar
+                grade
+                maxValue={GRADE_MAX_VALUE}
+                handleFilter={handleFilter}
+              />
             </ListContent>
           </List>
           <List>
             <ListTitle>예상수익률</ListTitle>
             <ListContent>
-              <IndividualFilterBar earningPercent range={EARNING_BAR_RANGE} />
+              <IndividualFilterBar
+                earningPercent
+                maxValue={PERCENT_MAX_VALUE}
+                handleFilter={handleFilter}
+              />
             </ListContent>
           </List>
         </ul>
@@ -66,6 +77,7 @@ const Container = styled.section`
   background: white;
   box-shadow: -15px 0px 29px -18px rgba(142, 142, 142, 0.41);
   transition: transform 0.6s ease-in-out;
+  z-index: 99;
 `;
 
 const Inner = styled.div`
@@ -91,14 +103,15 @@ const ListTitle = styled.span`
 `;
 
 const ListContent = styled.div`
-  margin-top: 20px;
-  padding: 0 15px;
+  margin-top: 30px;
+  padding: 0 10px;
   font-size: 18px;
-  color: gray;
+  color: ${({ theme }) => theme.colorTitle};
+`;
 
-  input {
-    margin-right: 10px;
-  }
+const CheckBoxContainer = styled.div`
+  display: inline-block;
+  margin-right: 10px;
 `;
 
 const Button = styled.div`

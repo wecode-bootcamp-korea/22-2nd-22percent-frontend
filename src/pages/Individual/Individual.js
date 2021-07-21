@@ -1,19 +1,97 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
 
 import IndividualItem from './IndividualItem/IndividualItem';
 import IndividualFilter from './IndividualFilter/IndividualFilter';
+import EmptyIndividual from './EmptyIndividual/EmptyIndividual';
+import StyledCheckBox from '../../components/StyledCheckBox/StyledCheckBox';
+import InvestmentBtn from './InvestmentBtn/InvestmentBtn';
+
+import { BASE_URL, INDIVIDUAL } from '../../config';
+import {
+  GRADE_BAR_RANGE,
+  EARNING_BAR_RANGE,
+  GRADE_CONVERSION,
+} from './IndividualFilter/filterRange';
 
 function Individual() {
-  const [wholeCheck, setWholeCheck] = useState(false);
-  const [isFilterOn, setIsFilterOn] = useState(false);
+  const [individual, setIndividual] = useState(null);
+  const [copyIndividual, setCopyIndividual] = useState([]);
+  const [gradeFilterRange, setGradeFilterRange] = useState({
+    start: 0,
+    end: GRADE_BAR_RANGE.length - 1,
+  });
+  const [earningFilterRange, setEarningFilterRange] = useState({
+    start: 0,
+    end: EARNING_BAR_RANGE.length - 1,
+  });
 
-  const handleCheckBox = e => {
-    setWholeCheck(!wholeCheck);
+  const [isFilterOn, setIsFilterOn] = useState(false);
+  const [isInvestBtnOn, setIsInvestBtnOn] = useState(false);
+
+  const [checkedItem, setCheckedItem] = useState([]);
+  const [isPurposeChecked, setIsPurposeChecked] = useState(false);
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}${INDIVIDUAL}`)
+      .then(res => res.json())
+      .then(res => {
+        setIndividual(res.results);
+        setCopyIndividual(res.results);
+      });
+  }, []);
+
+  const handleFilter = (grade, earningPercent, inputValue, direction) => {
+    if (grade) {
+      if (direction === 'start') {
+        setGradeFilterRange(prev => ({ start: inputValue, end: prev.end }));
+      } else if (direction === 'end') {
+        setGradeFilterRange(prev => ({ start: prev.start, end: inputValue }));
+      }
+    }
+
+    if (earningPercent) {
+      if (direction === 'start') {
+        setEarningFilterRange(prev => ({ start: inputValue, end: prev.end }));
+      } else if (direction === 'end') {
+        setEarningFilterRange(prev => ({ start: prev.start, end: inputValue }));
+      }
+    }
   };
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      const filteredList = individual.filter(item => {
+        return (
+          item.earningRate >= EARNING_BAR_RANGE[earningFilterRange.start] &&
+          item.earningRate <= EARNING_BAR_RANGE[earningFilterRange.end] &&
+          GRADE_CONVERSION[item.grade] >= gradeFilterRange.start &&
+          GRADE_CONVERSION[item.grade] <= gradeFilterRange.end &&
+          ((isPurposeChecked && item.title === '대환대출') || !isPurposeChecked)
+        );
+      });
+      setCopyIndividual(filteredList);
+    }
+  }, [earningFilterRange, gradeFilterRange, isPurposeChecked]);
+
+  useEffect(() => {
+    setIsInvestBtnOn(!!checkedItem.length);
+  }, [checkedItem]);
 
   const handleFilterBtn = () => {
     setIsFilterOn(true);
+  };
+
+  const handleAllChecked = () => {
+    const allItemsId = copyIndividual.map(item => item.index);
+
+    allItemsId.length === checkedItem.length
+      ? setCheckedItem([])
+      : setCheckedItem(allItemsId);
   };
 
   return (
@@ -21,21 +99,21 @@ function Individual() {
       <Inner>
         <TitleBox>
           <Title>
-            모집중 상품<span>25</span>
+            모집중 상품<span>{individual && individual.length}</span>
           </Title>
           <p>평일 오후 1시 새로운 상품이 오픈됩니다.</p>
         </TitleBox>
         <Table>
           <thead>
             <tr>
-              <Cell>
-                <CheckBox
-                  wholeCheck={wholeCheck}
-                  onChange={e => handleCheckBox(e)}
-                ></CheckBox>
+              <Cell checkbox>
+                <StyledCheckBox
+                  isChecked={copyIndividual.length === checkedItem.length}
+                  handleAllChecked={handleAllChecked}
+                />
               </Cell>
               <Cell colSpan="2" selectAll>
-                전체선택 (24)
+                전체선택 ({copyIndividual && copyIndividual.length})
               </Cell>
               <Cell>등급</Cell>
               <Cell>예상수익률</Cell>
@@ -45,16 +123,32 @@ function Individual() {
             </tr>
           </thead>
           <tbody>
-            {[...Array(24)].map((item, i) => (
-              <IndividualItem key={i} />
-            ))}
+            {copyIndividual.length !== 0 ? (
+              copyIndividual.map((item, i) => (
+                <IndividualItem
+                  checkedItem={checkedItem}
+                  setCheckedItem={setCheckedItem}
+                  data={item}
+                  key={i}
+                />
+              ))
+            ) : (
+              <EmptyIndividual />
+            )}
           </tbody>
         </Table>
         <Button onClick={handleFilterBtn}>
           <i className="fas fa-sliders-h"></i>
         </Button>
       </Inner>
-      <IndividualFilter isFilterOn={isFilterOn} setIsFilterOn={setIsFilterOn} />
+      <IndividualFilter
+        isPurposeChecked={isPurposeChecked}
+        setIsPurposeChecked={setIsPurposeChecked}
+        handleFilter={handleFilter}
+        isFilterOn={isFilterOn}
+        setIsFilterOn={setIsFilterOn}
+      />
+      {isInvestBtnOn && <InvestmentBtn checkedItem={checkedItem} />}
     </Container>
   );
 }
@@ -63,7 +157,7 @@ export default Individual;
 
 const Container = styled.section`
   ${({ theme }) => theme.flexMixin('center', 'center')};
-  margin: 80px 0 200px;
+  margin: 230px 0 200px;
 `;
 
 const Inner = styled.div`
@@ -90,16 +184,19 @@ const Table = styled.table`
 `;
 
 const Cell = styled.td`
-  padding: ${({ selectAll }) => (selectAll ? '30px 0 30px 7px' : '30px 0')};
-  background: #f8f9fa;
+  padding: 30px 0;
+  background: #f7f7f7;
   text-align: ${({ selectAll }) => !selectAll && 'center'};
   color: ${({ theme }) => theme.colorTitle};
-`;
-
-const CheckBox = styled.input.attrs({
-  type: 'checkbox',
-})`
-  cursor: pointer;
+  ${({ checkbox, selectAll }) =>
+    (checkbox &&
+      css`
+        padding: 30px 8px;
+      `) ||
+    (selectAll &&
+      css`
+        padding: 30px 0px 30px 7px;
+      `)}
 `;
 
 const Button = styled.div`
@@ -108,7 +205,7 @@ const Button = styled.div`
   right: 0;
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.colorTitle};
-  border-radius: 2px;
+  border-radius: 3px;
   font-size: 20px;
   color: ${({ theme }) => theme.colorTitle};
   cursor: pointer;
