@@ -1,32 +1,40 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import styled from 'styled-components';
+import StyledCheckBox from '../../../components/StyledCheckBox/StyledCheckBox';
 
-function IndividualItem() {
-  const [check, setCheck] = useState(false);
-
-  const handleCheckBox = e => {
-    setCheck(!check);
+function IndividualItem({ data, checkedItem, setCheckedItem }) {
+  const handleChecked = () => {
+    checkedItem.includes(data.index)
+      ? setCheckedItem(checkedItem.filter(item => item !== data.index))
+      : setCheckedItem([...checkedItem, data.index]);
   };
 
   return (
     <Row>
       <Cell>
-        <CheckBox check={check} onChange={handleCheckBox}></CheckBox>
+        <StyledCheckBox
+          isChecked={checkedItem.includes(data.index)}
+          handleChecked={handleChecked}
+        />
       </Cell>
-      <Cell productId>41292호</Cell>
+      <Cell productId>{data.index}호</Cell>
       <Cell loanType bigFont>
-        냠냠대출
+        {data.title}
       </Cell>
       <CellGrade>
-        <GradeBg grade={'B'}>B+</GradeBg>
+        <GradeBg grade={data.grade}>{data.grade}</GradeBg>
       </CellGrade>
-      <Cell bigFont>13.99%</Cell>
-      <Cell bigFont>12개월</Cell>
-      <Cell bigFont>608만원 / 811만원</Cell>
-      <Cell percent={74}>
-        <Progress value={74}></Progress>
-        <PercentText>74%</PercentText>
+      <Cell bigFont>{data.earningRate}%</Cell>
+      <Cell bigFont>{data.period}개월</Cell>
+      <Cell bigFont>
+        {Number(data.investmentAmount.toString().slice(0, -4))}만원 /{' '}
+        {Number(data.amount.toString().slice(0, -4))}만원
+      </Cell>
+      <Cell percent>
+        <Progress value={data.investmentAmount / data.amount}></Progress>
+        <PercentText value={data.investmentAmount / data.amount}>
+          {data.investmentAmount / data.amount}%
+        </PercentText>
       </Cell>
     </Row>
   );
@@ -46,21 +54,20 @@ const Row = styled.tr`
 `;
 
 const Cell = styled.td`
+  ${({ theme, percent }) => percent && theme.flexMixin('center', 'center')};
   padding: ${({ productId }) => (productId ? '28px 0 28px 7px' : '28px 0')};
-  ${({ theme, percent }) => percent && theme.flexMixin('center', 'start')};
   width: ${({ loanType }) => loanType && '30%'};
   text-align: ${({ loanType, productId }) =>
     !loanType && !productId && 'center'};
   font-size: ${({ bigFont }) => (bigFont ? '16px' : '14px')};
-  color: ${({ productId, percent, theme }) =>
-    (productId && theme.colorTitle) ||
-    (percent > 69 && '#e73d3d') ||
-    (percent < 70 && theme.colorMain)};
-  font-weight: ${({ percent }) => percent && '700'};
+  color: ${({ productId, theme }) => productId && theme.colorTitle};
 `;
 
 const PercentText = styled.span`
   margin-top: -5px;
+  color: ${({ theme, value }) =>
+    (value > 69 && '#e73d3d') || (value < 70 && theme.colorMain)};
+  font-weight: 700;
 `;
 
 const CellGrade = styled(Cell)`
@@ -87,22 +94,15 @@ const Progress = styled.div`
   }
 `;
 
-const CheckBox = styled.input.attrs({
-  type: 'checkbox',
-  // checked: false,
-})`
-  cursor: pointer;
-`;
-
 const GradeBg = styled.div`
   ${({ theme }) => theme.flexMixin('center', 'center')};
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 5px;
   background-color: ${({ grade }) =>
-    (grade === 'A' && '#2980E4') ||
-    (grade === 'B' && '#61C03E') ||
-    (grade === 'C' && '#EEC307') ||
-    (grade === 'D' && '#DD864D')};
+    (grade.includes('A') && '#2980E4') ||
+    (grade.includes('B') && '#61C03E') ||
+    (grade.includes('C') && '#EEC307') ||
+    (grade.includes('D') && '#DD864D')};
   color: white;
 `;

@@ -1,0 +1,34 @@
+{
+  "dealInfo": [
+    {
+      "name": "대환대출",
+      "category": "개인신용",
+      "grade": "D",
+      "earningRate": "17.07",
+      "repaymentPeriod": 12,
+      "repaymentMethod": "원금균등",
+      "netAmount": 5420000,
+      "repaymentDay": 5,
+      "reason": "타기관 대출 상환",
+      "debtor": "마전조",
+      "creditScore": [
+        570, 660, 661, 624, 597, 517, 510, 592, 563, 651, 694, 642
+      ]
+    },
+    {
+      "name": "대환대출",
+      "category": "개인신용",
+      "grade": "A",
+      "earningRate": "18.07",
+      "repaymentPeriod": 12,
+      "repaymentMethod": "원금균등",
+      "netAmount": 6420000,
+      "repaymentDay": 3,
+      "reason": "타기관 대출 상환",
+      "debtor": "마전조",
+      "creditScore": [
+        570, 660, 661, 624, 597, 517, 510, 592, 563, 651, 694, 642
+      ]
+    }
+  ]
+}
