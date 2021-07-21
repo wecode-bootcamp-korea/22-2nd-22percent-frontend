@@ -1,33 +1,32 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-const SLIDE_BG_COLOR = [
-  '#BFDEE8',
-  '#DBE8EC',
-  '#A4B24B',
-  '#5B9AC6',
-  '#C1866E',
-  '#CC8C2D',
-  '#79789C',
-];
+import { SLIDE_BG_COLOR } from '../slideBgColor';
 
-function MainSlideItem(props) {
+function MainSlideItem({ bgIdx, data }) {
   return (
-    <SlideItem idx={props.idx}>
+    <SlideItem bgIdx={bgIdx}>
       <Inner>
         <Info>
-          <SlideTitle>일산 풍동 숲속마을아파트</SlideTitle>
+          <SlideTitle>{data.title}</SlideTitle>
           <Desc>
             <InterestPercent>
-              <b>9.50</b>%
+              <b>{Number(data.earningRate).toFixed(1)}</b>%
             </InterestPercent>
-            <span>12개월 / 13,000만원</span>
+            <span>
+              {data.period}개월 /{' '}
+              {Number(data.amount.toString().slice(0, -4)).toLocaleString()}
+              만원
+            </span>
           </Desc>
-          <Button>상품 보러가기</Button>
+          <Link to={`/deals/${data.index}`}>
+            <Button bgIdx={bgIdx}>상품 보러가기</Button>
+          </Link>
         </Info>
         <div>
-          <img alt="real estate" src="http://placehold.it/400" />
+          <img alt="real estate" src={data.titleImage} />
         </div>
       </Inner>
     </SlideItem>
@@ -37,17 +36,21 @@ function MainSlideItem(props) {
 export default MainSlideItem;
 
 const SlideItem = styled.li`
-  ${({ theme }) => theme.flexMixin('center', 'normal')};
-  width: 100vw;
-  background-color: ${({ idx }) => SLIDE_BG_COLOR[idx]};
+  ${({ theme }) => theme.flexMixin('center', 'center')};
+  padding: 30px 0;
+  width: 100%;
+  background-color: ${({ bgIdx }) => SLIDE_BG_COLOR[bgIdx]};
+  transition: all 0.5s ease-in-out;
 `;
 
 const Inner = styled.div`
   ${({ theme }) => theme.flexMixin('space-between', 'center')};
   width: 55%;
-  height: 460px;
 
   img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
     border-radius: 50%;
   }
 `;
@@ -55,7 +58,7 @@ const Inner = styled.div`
 const Info = styled.div`
   ${({ theme }) => theme.flexMixin('space-between', 'normal')};
   flex-direction: column;
-  height: 50%;
+  color: white;
 `;
 
 const SlideTitle = styled.span`
@@ -65,6 +68,7 @@ const SlideTitle = styled.span`
 const Desc = styled.div`
   ${({ theme }) => theme.flexMixin('normal', 'normal')};
   flex-direction: column;
+  margin: 30px 0 25px;
 `;
 
 const InterestPercent = styled.span`
@@ -81,5 +85,8 @@ const Button = styled.button`
   width: 50%;
   border: none;
   border-radius: 4px;
+  background: white;
+  color: ${({ bgIdx }) => SLIDE_BG_COLOR[bgIdx]};
+  font-weight: 700;
   cursor: pointer;
 `;

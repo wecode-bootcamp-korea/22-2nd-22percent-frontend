@@ -35,7 +35,15 @@ function Nav() {
           <Divider>
             <Logo onClick={() => goToPage('/')}>8PERCENT</Logo>
             <List>
-              <li onClick={() => goToPage(realEstate.path)}>투자하기</li>
+              <li
+                onClick={() =>
+                  goToPage(
+                    `${realEstate.path}?category=mortgage&closed=true&offset=0&limit=8`
+                  )
+                }
+              >
+                투자하기
+              </li>
               <li>전문투자</li>
               <li>대출하기</li>
             </List>

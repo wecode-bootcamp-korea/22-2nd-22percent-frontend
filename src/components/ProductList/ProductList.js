@@ -1,31 +1,46 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ProductItem from './ProductItem/ProductItem';
 
-function ProductList() {
+function ProductList({
+  children,
+  inProgress,
+  preArranged,
+  progress,
+  scheduled,
+}) {
   const location = useLocation();
 
   return (
     <Container>
       <Product>
-        {location.pathname === '/deals/real-estate' && (
-          <Button>전체 투자</Button>
+        {location.pathname === '/deals/real-estate' && inProgress && (
+          <Link to={`/investments/apply`}>
+            <Button>전체 투자</Button>
+          </Link>
         )}
-        <ListTitle>모집중 상품</ListTitle>
+        <ListTitle>{children}</ListTitle>
         <ProductBox>
-          {[...Array(5)].map((li, i) => (
-            <ProductItem key={i} />
-          ))}
-        </ProductBox>
-      </Product>
-      <Product>
-        <ListTitle>오픈 예정 상품</ListTitle>
-        <ProductBox>
-          {[...Array(5)].map((li, i) => (
-            <ProductItem key={i} />
-          ))}
+          {inProgress &&
+            progress.map((li, i) => (
+              <ProductItem
+                data={li}
+                inProgress={inProgress}
+                preArranged={preArranged}
+                key={i}
+              />
+            ))}
+          {preArranged &&
+            scheduled.map((li, i) => (
+              <ProductItem
+                data={li}
+                inProgress={inProgress}
+                preArranged={preArranged}
+                key={i}
+              />
+            ))}
         </ProductBox>
       </Product>
     </Container>
