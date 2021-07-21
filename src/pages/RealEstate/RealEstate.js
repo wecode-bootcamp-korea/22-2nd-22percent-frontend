@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 
 import ProductList from '../../components/ProductList/ProductList';
 import PastProductList from './PastProductList/PastProductList';
 
+import { BASE_URL, MORTGAGE } from '../../config';
+import { stringToQuery } from '../../utilities/query';
+
 function RealEstate() {
+  const [progress, setProgress] = useState(null);
+  const [scheduled, setScheduled] = useState(null);
+  const [closed, setClosed] = useState(null);
+  const [closedQuantity, setClosedQuantity] = useState(0);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    fetch(`${BASE_URL}${MORTGAGE}`)
+      .then(res => res.json())
+      .then(res => {
+        setProgress(res.recruitingResults);
+        setScheduled(res.scheduledResults);
+      });
+
+    fetch(`${BASE_URL}${MORTGAGE}&closed=true&offset=0&limit=8`)
+      .then(res => res.json())
+      .then(res => {
+        setClosed(res.results);
+        setClosedQuantity(res.count);
+      });
+  }, []);
+
+  const fetchClosed = () => {
+    const queryObj = stringToQuery(history.location.search);
+
+    fetch(
+      `${BASE_URL}${MORTGAGE}&closed=true&offset=${queryObj.offset}&limit=8`
+    )
+      .then(res => res.json())
+      .then(res => {
+        Number(queryObj.offset !== 0) &&
+          setClosed(prev => [...prev, ...res.results]);
+      });
+  };
+
   return (
     <Container>
       <Inner>
@@ -15,8 +55,24 @@ function RealEstate() {
           </BannerText>
           <img alt="kakaotalk channel" src="/images/kakao-ch-banner.png" />
         </Banner>
-        <ProductList />
-        <PastProductList />
+        {progress && (
+          <ProductList inProgress progress={progress}>
+            모집중 상품
+          </ProductList>
+        )}
+        {scheduled && (
+          <ProductList preArranged scheduled={scheduled}>
+            오픈 예정 상품
+          </ProductList>
+        )}
+        {closed && (
+          <PastProductList
+            closed={closed}
+            setClosed={setClosed}
+            closedQuantity={closedQuantity}
+            fetchClosed={fetchClosed}
+          />
+        )}
       </Inner>
     </Container>
   );
@@ -27,7 +83,7 @@ export default RealEstate;
 const Container = styled.main`
   ${({ theme }) => theme.flexMixin('normal', 'center')};
   flex-direction: column;
-  padding-bottom: 150px;
+  padding: 200px 0 150px;
 `;
 
 const Inner = styled.div`
@@ -61,4 +117,8 @@ const BannerText = styled.div`
     font-weight: 700;
     font-size: 24px;
   }
+`;
+
+const Observer = styled.div`
+  display: none;
 `;

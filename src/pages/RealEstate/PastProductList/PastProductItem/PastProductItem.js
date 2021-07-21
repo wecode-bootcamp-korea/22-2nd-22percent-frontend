@@ -1,21 +1,27 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function PastProductItem() {
+function PastProductItem({ data }) {
+  const amount = Number(data.amount.toString().slice(0, -4)).toLocaleString();
+
   return (
-    <ProductItem>
-      <ImgContainer>
-        <img alt="real estate" src="http://placehold.it/300" />
-      </ImgContainer>
-      <div>
-        <ProductTitle>주택공급 19호 SH공사 행복주택 1차</ProductTitle>
-        <ProductDesc>
-          <span>
-            <b>8%</b>10,000만원 · 12개월
-          </span>
-        </ProductDesc>
-      </div>
-    </ProductItem>
+    <Link to={`/deals/${data.index}`}>
+      <ProductItem>
+        <ImgContainer>
+          <img alt="real estate" src={data.titleImage} />
+        </ImgContainer>
+        <div>
+          <ProductTitle>{data.title}</ProductTitle>
+          <ProductDesc>
+            <span>
+              <b>{Number(data.earningRate).toFixed(1)}%</b>
+              {amount}만원 · {data.period}개월
+            </span>
+          </ProductDesc>
+        </div>
+      </ProductItem>
+    </Link>
   );
 }
 

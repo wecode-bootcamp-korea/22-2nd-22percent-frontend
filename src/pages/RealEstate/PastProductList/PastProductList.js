@@ -1,18 +1,31 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 
 import PastProductItem from './PastProductItem/PastProductItem';
 
-function PastProductList() {
+import { stringToQuery } from '../../../utilities/query';
+
+function PastProductList({ closed, fetchClosed, closedQuantity }) {
+  const history = useHistory();
+  const queryObj = stringToQuery(history.location.search);
+
+  const handleViewMore = () => {
+    history.push(`?closed=true&offset=${Number(queryObj.offset) + 8}&limit=8`);
+    fetchClosed();
+  };
+
   return (
     <section>
       <Title>지난 투자 상품</Title>
       <ProductList>
-        {[...Array(50)].map((li, i) => (
-          <PastProductItem key={i} />
+        {closed.map((li, i) => (
+          <PastProductItem data={li} key={i} />
         ))}
       </ProductList>
-      <ViewMore>지난 투자 상품 더 보기</ViewMore>
+      {Number(queryObj.offset) + Number(queryObj.limit) < closedQuantity && (
+        <ViewMore onClick={handleViewMore}>지난 투자 상품 더 보기</ViewMore>
+      )}
     </section>
   );
 }
@@ -29,13 +42,12 @@ const ProductList = styled.ul`
   grid-template-columns: repeat(4, 1fr);
   column-gap: 30px;
   row-gap: 80px;
-  padding: 30px 0 200px;
+  padding: 30px 0 150px;
 `;
 
 const ViewMore = styled.div`
-  margin: 0 auto;
-  padding: 20px 30px;
-  width: 150px;
+  ${({ theme }) => theme.flexMixin('center', 'center')};
+  padding: 25px 0;
   border: 1px solid ${({ theme }) => theme.colorTitle};
   border-radius: 5px;
   color: ${({ theme }) => theme.colorTitle};

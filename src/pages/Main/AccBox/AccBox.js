@@ -33,7 +33,7 @@ const AccContainer = styled.section`
   ${({ theme }) => theme.flexMixin('space-between', 'center')};
   flex-direction: column;
   padding: 50px 0;
-  height: 300px;
+  height: 350px;
 `;
 
 const AccLoans = styled.div`
@@ -59,13 +59,17 @@ const AccList = styled.ul`
 `;
 
 const List = styled.li`
-  ${({ theme }) => theme.flexMixin('space-between', 'center')};
+  ${({ theme }) => theme.flexMixin};
   flex-direction: column;
-  height: 55px;
+  margin: 10px 0;
   width: 40%;
   font-size: 18px;
 
   & + li {
     border-left: 1px solid ${({ theme }) => theme.colorDesc};
+  }
+
+  span {
+    margin-bottom: 10px;
   }
 `;
