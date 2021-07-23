@@ -1,44 +1,65 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function PortfolioTable({ portfolio }) {
+const NAME_LIST = {
+  underEight: '8% 이하',
+  overEight: '8% 이상',
+  overTen: '10% 이상',
+  overTwelve: '12%이상',
+  company: '사업자',
+  personal: '개인',
+  special: '스페셜딜',
+  estate: '부동산',
+  etc: '기타',
+};
+
+function PortfolioTable({ portfolio, currInfo }) {
   return (
     <Table>
+      {currInfo === 'grade' ? (
+        <div>
+          {portfolio.grades
+            .map((grade, idx) => {
+              return (
+                <ColItem key={idx}>
+                  <img src={`/image/${grade}.png`} alt={grade} />
+                </ColItem>
+              );
+            })
+            .splice(0, 4)}
+          <ColItem>
+            <span>기타</span>
+          </ColItem>
+        </div>
+      ) : (
+        <div>
+          {portfolio[Object.keys(portfolio)[0]].map(item => {
+            return (
+              <PortfolioCol key={item}>
+                <span>{NAME_LIST[item]}</span>{' '}
+              </PortfolioCol>
+            );
+          })}
+        </div>
+      )}
       <div>
-        <ColItem>
-          <img src="/image/a.png" alt="a" />
-        </ColItem>
-        <ColItem>
-          <img src="/image/b.png" alt="b" />
-        </ColItem>
-        <ColItem>
-          <img src="/image/c.png" alt="c" />
-        </ColItem>
-        <ColItem>
-          <img src="/image/d.png" alt="d" />
-        </ColItem>
-        <ColItem>
-          <span>기타</span>
-        </ColItem>
-      </div>
-      <div>
-        {portfolio.grade.amount.map((amount, idx) => {
+        {portfolio.amount.map((item, idx) => {
           return (
             <ProgressBar
               key={idx}
-              max={portfolio.grade.amount.reduce((pre, cur) => pre + cur, 0)}
-              value={amount}
+              max={portfolio.amount.reduce((pre, cur) => pre + cur, 0)}
+              value={item}
             />
           );
         })}
       </div>
       <div>
-        {portfolio.grade.amount.map((amount, idx) => {
+        {portfolio.amount.map((amount, idx) => {
           return <Amount key={idx}>{amount.toLocaleString()}원</Amount>;
         })}
       </div>
       <div>
-        {portfolio.grade.count.map((count, idx) => {
+        {portfolio.count.map((count, idx) => {
           return <Amount key={idx}>{count}건</Amount>;
         })}
       </div>
@@ -58,6 +79,10 @@ const ColItem = styled.div`
   img {
     width: 25px;
   }
+`;
+
+const PortfolioCol = styled.div`
+  padding: 15px 0;
 `;
 
 const ProgressBar = styled.progress`

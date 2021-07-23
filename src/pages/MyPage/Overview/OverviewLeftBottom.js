@@ -46,7 +46,7 @@ const Box = styled.div`
 `;
 
 const LimitBox = styled(Box)`
-  padding: 20px;
+  padding: 19px;
 
   i {
     padding-left: 5px;
