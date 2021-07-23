@@ -3,9 +3,7 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SubNavItem from './SubNavItem';
-
-const DEALS = ['부동산', '개인신용'];
-const MYPAGE = ['투자요약', '투자내역'];
+import { DEALS, MYPAGE } from './navTabList';
 
 function SubNav() {
   const location = useLocation();
@@ -15,7 +13,7 @@ function SubNav() {
       <Inner>
         <List>
           <SubNavItem>
-            {location.pathname.includes('mypage') ? MYPAGE : DEALS}
+            {location.pathname.includes('my') ? MYPAGE : DEALS}
           </SubNavItem>
         </List>
       </Inner>
@@ -27,8 +25,14 @@ export default SubNav;
 
 const Bar = styled.nav`
   ${({ theme }) => theme.flexMixin};
+  position: fixed;
+  top: 90px;
+  left: 0;
+  right: 0;
+  background: white;
   font-weight: 700;
   font-size: 20px;
+  z-index: 9;
   box-shadow: 0px 25px 29px -18px rgba(142, 142, 142, 0.41);
 `;
 
