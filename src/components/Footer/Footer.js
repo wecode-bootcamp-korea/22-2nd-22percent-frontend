@@ -47,7 +47,7 @@ function Footer() {
           </Service>
           <SnsBox>
             <i className="fab fa-facebook"></i>
-            <i class="fab fa-google-plus"></i>
+            <i className="fab fa-google-plus"></i>
             <i className="fab fa-snapchat"></i>
           </SnsBox>
         </InfoContainer>
