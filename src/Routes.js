@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp/SignUp';
 import Overview from './pages/MyPage/Overview/Overview';
 import Main from './pages/Main/Main';
 import RealEstate from './pages/RealEstate/RealEstate';
+import Individual from './pages/Individual/Individual';
 import RealEstateDetail from './pages/RealEstateDetail/RealEstateDetail';
 import Apply from './pages/Apply/Apply';
 import Footer from './components/Footer/Footer';
@@ -29,6 +30,7 @@ class Routes extends React.Component {
               <Route exact path="/mypage/overview" component={Overview} />
               <Route exact path="/" component={Main} />
               <Route exact path="/deals/real-estate" component={RealEstate} />
+              <Route exact path="/deals/individual" component={Individual} />
               <Route exact path="/deals/:id" component={RealEstateDetail} />
               <Route exact path="/investments/apply" component={Apply} />
             </Switch>
