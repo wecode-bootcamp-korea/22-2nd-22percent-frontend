@@ -1,8 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import InvestContent from './InvestContent';
+import Modal from './Modal';
 
-function OverviewRightTop({ overview, investStatus }) {
+function OverviewRightTop({ summary }) {
+  const [currentStatus, setCurrentStatus] = useState('total');
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  //모달창 열기
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  //모달창 닫기
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  //탭 누르면 "전체" 또는 "투자중"으로 콘텐츠를 바꾸기 위한 state
+  const switchToTotal = () => {
+    setCurrentStatus(true);
+  };
+
+  const switchToInvesting = () => {
+    setCurrentStatus(false);
+  };
+
   return (
     <>
       <ProfitBox>
@@ -13,7 +36,7 @@ function OverviewRightTop({ overview, investStatus }) {
               <i className="far fa-question-circle"></i>
             </div>
           </div>
-          <EarningRate>{overview.earningRate}%</EarningRate>
+          <EarningRate>{summary.overview.earningRate}%</EarningRate>
         </Earning>
         <ProfitInfo>
           <ProfitDetail>
@@ -22,10 +45,7 @@ function OverviewRightTop({ overview, investStatus }) {
               <ProfitSubtitle>예치금+투자 중 원금</ProfitSubtitle>
             </ProfitDetailTitle>
             <ProfitAmount>
-              {overview.asset
-                .toString()
-                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
-              원{/* 천단위로 콤마 찍는거 매번 이렇게 해야하나? */}
+              {summary.overview.asset.toLocaleString()}원
             </ProfitAmount>
           </ProfitDetail>
           <ProfitDetail>
@@ -34,10 +54,7 @@ function OverviewRightTop({ overview, investStatus }) {
               <ProfitSubtitle>세전</ProfitSubtitle>
             </ProfitDetailTitle>
             <ProfitAmount>
-              {overview.revenue
-                .toString()
-                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
-              원
+              {summary.overview.paidRevenue.toLocaleString()}원
             </ProfitAmount>
           </ProfitDetail>
         </ProfitInfo>
@@ -45,15 +62,27 @@ function OverviewRightTop({ overview, investStatus }) {
       <InvestStatus>
         <InvestBox>
           <InvestTitle>
-            투자현황<i className="far fa-question-circle"></i>{' '}
+            투자현황
+            <i className="far fa-question-circle" onClick={openModal}></i>{' '}
           </InvestTitle>
           <BtnNav>
-            <InvestBtn>전체</InvestBtn>
-            <InvestBtn>투자중</InvestBtn>
+            <TotalBtn onClick={switchToTotal} currentStatus={currentStatus}>
+              전체
+            </TotalBtn>
+            <InvestingBtn
+              onClick={switchToInvesting}
+              currentStatus={currentStatus}
+            >
+              투자중
+            </InvestingBtn>
           </BtnNav>
-          <InvestContent investStatus={investStatus} />
+          <InvestContent
+            investStatus={summary.investStatus}
+            currentData={currentStatus}
+          />
         </InvestBox>
       </InvestStatus>
+      {isModalOpen && <Modal closeModal={closeModal} />}
     </>
   );
 }
@@ -80,6 +109,7 @@ const Earning = styled.div`
     padding-left: 5px;
     color: #ccc;
     font-size: 1.1rem;
+    cursor: pointer;
   }
 `;
 
@@ -130,6 +160,10 @@ const InvestBox = styled.div`
 
 const InvestTitle = styled.div`
   padding-bottom: 10px;
+
+  i {
+    cursor: pointer;
+  }
 `;
 
 const BtnNav = styled.nav`
@@ -142,18 +176,22 @@ const InvestBtn = styled.button`
   width: 60px;
   height: 30px;
   border: 1px solid #ccc;
-  background: white;
   cursor: pointer;
   color: grey;
-
-  &:first-child {
-    border-radius: 3px 0 0 3px;
-    border-right: 0px;
-  }
-
-  &:last-child {
-    border-radius: 0 3px 3px 0;
-  }
 `;
 
+const TotalBtn = styled(InvestBtn)`
+  border-radius: 3px 0 0 3px;
+  border-right: 0px;
+  background: ${({ currentStatus }) => (currentStatus ? '#fafafa' : 'white')};
+  font-weight: ${({ currentStatus }) => (currentStatus ? 600 : 400)};
+  color: ${({ currentStatus }) => (currentStatus ? 'black' : 'grey')};
+`;
+
+const InvestingBtn = styled(InvestBtn)`
+  border-radius: 0 3px 3px 0;
+  background: ${({ currentStatus }) => (currentStatus ? 'white' : '#fafafa')};
+  font-weight: ${({ currentStatus }) => (currentStatus ? 400 : 600)};
+  color: ${({ currentStatus }) => (currentStatus ? 'grey' : 'black')};
+`;
 export default OverviewRightTop;

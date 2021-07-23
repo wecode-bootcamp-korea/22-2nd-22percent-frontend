@@ -12,7 +12,7 @@
       "term": 12,
       "amount": 0.5,
       "repayment": "29%",
-      "cycle": "12/12",
+      "cycle": 12,
       "status": "신청중"
     },
     {
