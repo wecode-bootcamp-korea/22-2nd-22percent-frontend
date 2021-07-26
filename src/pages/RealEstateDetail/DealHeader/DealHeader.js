@@ -5,13 +5,13 @@ import DealInfo from './DealInfo';
 
 function DealHeader() {
   const itmes = ['등급', '수익률', '상환기관', '상환방식', '모집현황'];
+function DealHeader(props) {
+  console.log(props);
   return (
     <DealWrap>
       <DealHeaderGrid>
         <DealIndex>41207호</DealIndex>
-        <DealHeading>
-          소거안정 357호 세종 새뜸1단지 메이저시티푸르지오
-        </DealHeading>
+        <DealHeading>{props.dealInfoName}</DealHeading>
         <DealInfoContainer>
           <ul>
             {itmes.map(itmes => (

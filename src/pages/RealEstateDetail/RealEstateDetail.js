@@ -6,20 +6,36 @@ import DealHeader from './DealHeader/DealHeader';
 import Deal from './Deal/Deal';
 import ControllerWrap from './ControllerWrap/ControllerWrap';
 
-function RealEstateDetail() {
+const RealEstateDetail = () => {
+  const [dealInfo, setDealInfo] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API.REALESTATEDETAIL}`)
+      .then(res => res.json())
+      //.then(res => console.log(res.dealInfo[0].name));
+      .then(res => setDealInfo(res.dealInfo));
+  }, []);
+  console.log(dealInfo);
   return (
     <main>
-      <Slide />
-      <DealHeader />
-      <ContentWrap>
-        <section>
-          <Deal />
-          <ControllerWrap />
-        </section>
-      </ContentWrap>
+      {dealInfo && (
+        <>
+          <Slide />
+          <DealHeader
+            dealInfoName={dealInfo[0].name}
+            delInfoGrade={dealInfo[0].grade}
+          />
+          <ContentWrap>
+            <section>
+              <Deal />
+              <ControllerWrap />
+            </section>
+          </ContentWrap>
+        </>
+      )}
     </main>
   );
-}
+};
 
 export default RealEstateDetail;
 
