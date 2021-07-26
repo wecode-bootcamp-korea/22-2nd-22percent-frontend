@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './components/Nav/Nav';
 import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
-import Overview from './pages/MyPage/Overview/Overview';
+import MyPage from './pages/MyPage/Overview/Overview';
+import History from './pages/MyPage/History/History';
 import Main from './pages/Main/Main';
 import RealEstate from './pages/RealEstate/RealEstate';
 import Individual from './pages/Individual/Individual';
@@ -27,7 +28,8 @@ class Routes extends React.Component {
             <Switch>
               <Route exact path="/signin" component={SignIn} />
               <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/mypage/overview" component={Overview} />
+              <Route exact path="/mypage/overview" component={MyPage} />
+              <Route exact path="/mypage/history" component={History} />
               <Route exact path="/" component={Main} />
               <Route exact path="/deals/real-estate" component={RealEstate} />
               <Route exact path="/deals/individual" component={Individual} />
