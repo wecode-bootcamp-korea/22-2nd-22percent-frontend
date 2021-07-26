@@ -6,23 +6,26 @@ export default function HistoryHeader({ filterHandler }) {
     <Header>
       <select name="filter" onChange={filterHandler}>
         {OPTION_LIST.map(option => (
-          <option value={option}>{option}</option>
+          <option value={option}>{STATUS_NAME[option]}</option>
         ))}
       </select>
     </Header>
   );
 }
 
-const OPTION_LIST = [
-  '전체',
-  '신청중',
-  '정상',
-  '상환지연',
-  '연체',
-  '부실',
-  '정산상환완료',
-  '부실상환완료',
-];
+const OPTION_LIST = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+const STATUS_NAME = {
+  0: '전체',
+  1: '신청중',
+  2: '정상',
+  3: '상환지연',
+  4: '연체',
+  5: '부실',
+  6: '정상상환완료',
+  7: '부실상환완료',
+  8: '모집예정',
+};
 
 const Header = styled.header`
   ${({ theme }) => theme.flexMixin('flex-start', 'center')};
