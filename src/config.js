@@ -1,4 +1,6 @@
 const IP_ADDRESS = '13.124.4.250';
+const MORTGAGE = '/deals?category=mortgage';
+const INDIVIDUAL = '/deals?category=individual';
 
 export const BASE_URL = `http://${IP_ADDRESS}:8000`;
 export const SIGNUP_API = `http://${IP_ADDRESS}:8000/users/signup`;
