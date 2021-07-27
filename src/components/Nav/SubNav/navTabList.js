@@ -15,12 +15,12 @@ const MYPAGE = [
   {
     id: 'my_0',
     name: '투자요약',
-    path: '/my/investor/overview',
+    path: '/mypage/overview',
   },
   {
     id: 'my_1',
     name: '투자내역',
-    path: '/my/investor/investments',
+    path: '/mypage/investments',
   },
 ];
 

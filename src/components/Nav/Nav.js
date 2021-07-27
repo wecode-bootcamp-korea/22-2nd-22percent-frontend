@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import SubNav from './SubNav/SubNav';
-import { DEALS } from './SubNav/navTabList';
+import SignOut from './SignOut/SignOut';
+import SignIn from './SignIn/SignIn';
 
-const NEED_SUBNAV_PATH = ['deals', 'my'];
+import { DEALS } from './SubNav/navTabList';
+import { getToken } from '../../utilities/token';
+
+const NEED_SUBNAV_PATH = ['deals', 'mypage'];
 
 function Nav() {
+  const [isValidUser, setIsValidUser] = useState(false);
+
   const location = useLocation();
   const history = useHistory();
+
+  useEffect(() => {
+    setIsValidUser(getToken());
+  });
 
   const isSubNavOn = NEED_SUBNAV_PATH.some(pathname =>
     location.pathname.includes(pathname)
   );
 
   const goToPage = pathname => history.push(pathname);
-  const realEstataePath = DEALS[0].path;
+  const [realEstate] = DEALS;
 
   return (
     <>
@@ -25,19 +35,12 @@ function Nav() {
           <Divider>
             <Logo onClick={() => goToPage('/')}>8PERCENT</Logo>
             <List>
-              <li onClick={() => goToPage(realEstataePath)}>투자하기</li>
+              <li onClick={() => goToPage(realEstate.path)}>투자하기</li>
               <li>전문투자</li>
               <li>대출하기</li>
             </List>
           </Divider>
-          <Divider>
-            <Button signin onClick={() => goToPage('/signin')}>
-              로그인
-            </Button>
-            <Button signup onClick={() => goToPage('/signup')}>
-              회원가입
-            </Button>
-          </Divider>
+          <Divider>{isValidUser ? <SignIn /> : <SignOut />}</Divider>
         </InnerBox>
       </NavBar>
       {isSubNavOn && <SubNav />}
@@ -92,23 +95,4 @@ const List = styled.ul`
       color: ${({ theme }) => theme.colorMain};
     }
   }
-`;
-
-const Button = styled.div`
-  padding: 15px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  ${({ signin, signup, theme }) =>
-    (signup &&
-      css`
-        margin-left: 10px;
-        background: white;
-        border: 1px solid ${theme.colorMain};
-        color: ${theme.colorMain};
-      `) ||
-    (signin &&
-      css`
-        background: ${theme.colorMain};
-        color: white;
-      `)}
 `;
