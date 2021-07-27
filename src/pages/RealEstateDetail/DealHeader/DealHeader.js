@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import DealInfo from './DealInfo';
-
-function DealHeader() {
-  const itmes = ['등급', '수익률', '상환기관', '상환방식', '모집현황'];
 function DealHeader(props) {
+  const itmes = ['등급', '수익률', '상환기관', '상환방식', '모집현황'];
+
   console.log(props);
   return (
     <DealWrap>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Slide from './Slide/Slide';
@@ -10,7 +10,7 @@ const RealEstateDetail = () => {
   const [dealInfo, setDealInfo] = useState(null);
 
   useEffect(() => {
-    fetch(`${API.REALESTATEDETAIL}`)
+    fetch(`https://13.124.4.250:8000/deals/100`)
       .then(res => res.json())
       //.then(res => console.log(res.dealInfo[0].name));
       .then(res => setDealInfo(res.dealInfo));
