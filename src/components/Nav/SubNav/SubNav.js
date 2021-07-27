@@ -13,7 +13,7 @@ function SubNav() {
       <Inner>
         <List>
           <SubNavItem>
-            {location.pathname.includes('my') ? MYPAGE : DEALS}
+            {location.pathname.includes('mypage') ? MYPAGE : DEALS}
           </SubNavItem>
         </List>
       </Inner>
