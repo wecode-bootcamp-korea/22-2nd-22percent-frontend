@@ -11,7 +11,7 @@ function MainSlide() {
       </ArrowBtn>
       <SlideInner>
         {[...Array(7)].map((item, i) => (
-          <MainSlideItem key={i} idx={i} />
+          <MainSlideItem key={i} idx={i} item={item} />
         ))}
       </SlideInner>
       <ArrowBtn className="right">
