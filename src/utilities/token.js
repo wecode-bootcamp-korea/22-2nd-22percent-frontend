@@ -8,4 +8,4 @@ const setToken = token => {
   localStorage.setItem(TOKEN_KEY, token);
 };
 
-export { getToken, setToken };
+export { getToken, setToken, TOKEN_KEY };
