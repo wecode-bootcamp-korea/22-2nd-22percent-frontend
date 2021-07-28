@@ -88,7 +88,7 @@ function Slide() {
       </CaruselBtnWrap>
     </CarouselContainer>
   );
-}
+});
 
 export default Slide;
 

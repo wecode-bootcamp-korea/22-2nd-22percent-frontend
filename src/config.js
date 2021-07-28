@@ -13,4 +13,4 @@ export const HISTORY_API = `http://${IP_ADDRESS}:8000/investments/history`;
 export const PORTFOLIO_API = `http://${IP_ADDRESS}:8000/investments/portfolio`;
 export const SUMMARY_API = `http://${IP_ADDRESS}:8000/investments/summary`;
 
-export const REALESTATEDETAIL = '/deals/100';
+export const REALESTATEDETAIL = `${BASE_URL}/deals/`;

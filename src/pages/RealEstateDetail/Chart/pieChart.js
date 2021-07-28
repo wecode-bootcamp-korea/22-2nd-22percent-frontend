@@ -1,5 +1,5 @@
 export const makePieChartData = () => {
-  return {
+  const pieChart = {
     legend: {
       display: false,
     },
@@ -17,13 +17,23 @@ export const makePieChartData = () => {
           'rgb(173, 181, 189)',
           'rgb(50, 130, 240)',
         ],
-        borderWidth: '.5',
+        borderWidth: '0',
         weight: '.5',
-        options: {
-          responsive: false,
-        },
+        responsive: false,
+        tooltip: false,
+        text: '23%',
+        cutout: '60%',
       },
     ],
-    text: '23%',
   };
+  return pieChart;
+};
+
+export const CHART_OPTION = {
+  plugins: {
+    tooltip: {
+      enabled: false,
+    },
+    offset: true,
+  },
 };

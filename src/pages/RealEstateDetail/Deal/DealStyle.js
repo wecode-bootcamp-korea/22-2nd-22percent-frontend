@@ -110,6 +110,7 @@ export const ChartCenter = styled.div`
   justify-content: center;
   flex-direction: column;
 `;
+
 //chart.chart
 export const ChartItem = styled.div`
   height: 240px;
