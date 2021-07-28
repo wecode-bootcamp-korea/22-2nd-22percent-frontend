@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import styled from 'styled-components';
 
 import { SLIDE_BG_COLOR } from '../slideBgColor';
@@ -40,7 +39,6 @@ const SlideItem = styled.li`
   padding: 30px 0;
   width: 100%;
   background-color: ${({ bgIdx }) => SLIDE_BG_COLOR[bgIdx]};
-  transition: all 0.5s ease-in-out;
 `;
 
 const Inner = styled.div`

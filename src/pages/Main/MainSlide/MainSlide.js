@@ -12,7 +12,7 @@ function MainSlide({ slide }) {
 
   const initialMount = useRef(true);
   const timeoutRef = useRef(null);
-  let isMoving = useRef(true);
+  const isMoving = useRef(true);
 
   const handleSlideAutoMove = () => {
     setIsTransitionOn(true);
