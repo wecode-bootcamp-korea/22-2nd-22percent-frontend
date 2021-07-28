@@ -1,9 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
-import DealInfo from './DealInfo';
 function DealHeader(props) {
-  const itmes = ['등급', '수익률', '상환기관', '상환방식', '모집현황'];
+  const numberToKorean = number => {
+    let inputNumber = number < 0 ? false : number;
+    let unitWords = ['', '만', '억', '조', '경'];
+    let splitUnit = 10000;
+    let splitCount = unitWords.length;
+    let resultArray = [];
+    let resultString = '';
+
+    for (let i = 0; i < splitCount; i++) {
+      let unitResult =
+        (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i);
+      unitResult = Math.floor(unitResult);
+      if (unitResult > 0) {
+        resultArray[i] = unitResult;
+      }
+    }
+    for (let i = 0; i < resultArray.length; i++) {
+      if (!resultArray[i]) continue;
+      resultString = String(resultArray[i]) + unitWords[i] + resultString;
+    }
+    return resultString;
+  };
+  const dealInfoNetAmount = numberToKorean(props.dealInfoNetAmount);
 
   console.log(props);
   return (
@@ -13,16 +34,47 @@ function DealHeader(props) {
         <DealHeading>{props.dealInfoName}</DealHeading>
         <DealInfoContainer>
           <ul>
-            {itmes.map(itmes => (
-              <DealInfo setItmes={itmes} />
-            ))}
+            <li className="deal-info">
+              <p className="deal-info-label">등급</p>
+              <GradeBg grade={props.delInfoGrade}>{props.delInfoGrade}</GradeBg>
+            </li>
+            <li className="deal-info-bar"></li>
+            <li className="deal-info">
+              <p className="deal-info-label">수익률</p>
+              <p className="deal-info-value">{props.dealInfoEarningRate}%</p>
+            </li>
+            <li className="deal-info-bar"></li>
+            <li className="deal-info">
+              <p className="deal-info-label">상환기간</p>
+              <p className="deal-info-value">
+                {props.dealInfoRepaymentPeriod}개월
+              </p>
+            </li>
+            <li className="deal-info-bar"></li>
+            <li className="deal-info">
+              <p className="deal-info-label">상환방식</p>
+              <p className="deal-info-value">만기일시</p>
+            </li>
+            <li className="deal-info-bar"></li>
+            <li className="deal-info">
+              <p className="deal-info-label">모집현황</p>
+              <p className="deal-info-value">{dealInfoNetAmount}원</p>
+            </li>
           </ul>
         </DealInfoContainer>
       </DealHeaderGrid>
       <DealProgress>
-        <DealProgressTick></DealProgressTick>
+        <DealProgressTick
+          active={props.dealInfoRepaymentPeriod}
+          //style={{ left: `${props.dealInfoRepaymentPeriod}%` }}
+        ></DealProgressTick>
         <DealProgressRail>
-          <DealProgressHandle>64%</DealProgressHandle>
+          <DealProgressHandle
+            active={props.dealInfoRepaymentPeriod}
+            //style={{ left: `${props.dealInfoRepaymentPeriod}%` }}
+          >
+            {props.dealInfoRepaymentPeriod}%
+          </DealProgressHandle>
         </DealProgressRail>
       </DealProgress>
     </DealWrap>
@@ -51,7 +103,7 @@ const DealIndex = styled.article`
   font-weight: 400;
   line-height: 1.38;
   letter-spacing: -0.3px;
-  color: #858d94;
+  color: #fff;
 `;
 
 const DealHeading = styled.h1`
@@ -102,13 +154,32 @@ const DealProgress = styled.div`
   background-image: linear-gradient(to right, #a56ceb, #6c3ad3);
 `;
 
+const lineMoction = keyLeft => keyframes`
+0%{
+  left:0%;
+}
+100%{
+  left:${keyLeft}%
+}
+`;
+
+const moveMoction = keyLeft => keyframes`
+  0%{
+  left:0%;
+}
+100%{
+  left:${keyLeft}%
+}
+`;
+
 const DealProgressTick = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: ${props => lineMoction(props.active)};
   background-color: #e6e6e6;
+  animation: ${props => lineMoction(props.active)} 2s ease-in-out forwards;
 `;
 
 const DealProgressRail = styled.div`
@@ -128,4 +199,19 @@ const DealProgressHandle = styled.span`
   background-color: ${props => props.theme.colorMain};
   z-index: 1;
   transform: translateX(-50%);
+  animation: ${props => moveMoction(props.active)} 2s ease-in-out forwards;
+`;
+
+const GradeBg = styled.p`
+  color: #fff !important;
+  ${({ theme }) => theme.flexMixin('center', 'center')};
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: ${({ grade }) =>
+    (grade.includes('A') && '#2980E4') ||
+    (grade.includes('B') && '#61C03E') ||
+    (grade.includes('C') && '#EEC307') ||
+    (grade.includes('D') && '#DD864D')};
+  color: #ffffff;
 `;

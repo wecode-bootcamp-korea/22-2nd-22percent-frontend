@@ -5,9 +5,9 @@ import { makeLineChartData } from '../../Chart/lineChart.js';
 
 import * as S from '../DealStyle';
 
-function DealInfo() {
+function DealInfo(props) {
   //Chart Data
-  const line = makeLineChartData();
+  const line = makeLineChartData(props.dealInfocreditScore);
   return (
     <S.ContentBlock>
       <S.ContentHeading>대출자 정보 </S.ContentHeading>
