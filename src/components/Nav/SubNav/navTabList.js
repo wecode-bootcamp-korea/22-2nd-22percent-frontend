@@ -20,7 +20,7 @@ const MYPAGE = [
   {
     id: 'my_1',
     name: '투자내역',
-    path: '/mypage/investments',
+    path: '/mypage/history',
   },
 ];
 
