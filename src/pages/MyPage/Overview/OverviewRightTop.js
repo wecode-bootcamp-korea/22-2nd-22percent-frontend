@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import InvestContent from './InvestContent';
-import Modal from './Modal';
 
-function OverviewRightTop({ summary }) {
+function OverviewRightTop({ summary, openModal }) {
   const [currentStatus, setCurrentStatus] = useState('total');
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  //모달창 열기
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  //모달창 닫기
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
   //탭 누르면 "전체" 또는 "투자중"으로 콘텐츠를 바꾸기 위한 state
   const switchToTotal = () => {
@@ -82,7 +70,6 @@ function OverviewRightTop({ summary }) {
           />
         </InvestBox>
       </InvestStatus>
-      {isModalOpen && <Modal closeModal={closeModal} />}
     </>
   );
 }
@@ -146,12 +133,6 @@ const InvestStatus = styled(Box)`
   position: relative;
   height: 250px;
   padding: 25px;
-
-  i {
-    padding-left: 5px;
-    color: #ccc;
-    font-size: 1.1rem;
-  }
 `;
 
 const InvestBox = styled.div`
@@ -162,6 +143,9 @@ const InvestTitle = styled.div`
   padding-bottom: 10px;
 
   i {
+    padding-left: 5px;
+    color: #ccc;
+    font-size: 1.1rem;
     cursor: pointer;
   }
 `;
@@ -194,4 +178,5 @@ const InvestingBtn = styled(InvestBtn)`
   font-weight: ${({ currentStatus }) => (currentStatus ? 400 : 600)};
   color: ${({ currentStatus }) => (currentStatus ? 'grey' : 'black')};
 `;
+
 export default OverviewRightTop;
