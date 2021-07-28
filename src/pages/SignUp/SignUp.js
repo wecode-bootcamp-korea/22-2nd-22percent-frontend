@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 import { SIGNUP_API, KAKAO_API } from '../../config';
-import { checkEmail, checkPwd } from '../../Validation/Validation';
+import { validator } from '../../Validation/Validation';
 import Input from '../../components/Login/Input';
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [formValues, setFormValues] = useState({
+    email: '',
+    password: '',
+  });
   const [checkList, setCheckList] = useState([]);
+  // const [error, setError] = useState(false);
   const history = useHistory();
 
   // 체크박스 전체선택시 모두선택 체크박스 활성화시키기
@@ -46,22 +49,41 @@ const SignUp = () => {
   };
 
   // 이메일로 회원가입 및 로그인
-  const handleEmail = e => {
-    setEmail(e.target.value);
+  const handleSignupForm = e => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
   };
 
-  const handlePwd = e => {
-    setPwd(e.target.value);
+  // 유효성검사 함수
+  const isAllValid = form => {
+    for (const name in form) {
+      const value = form[name];
+      const validateFunction = validator[name];
+
+      if (!validateFunction(value)) return false;
+    }
+
+    return true;
   };
 
+  // 에러메세지 출력 함수
+  // const handleError = () => {
+  // if (isAllValid(formValues)) {
+  //   setError(false);
+  // } else {
+  //   setError(true);
+  // }
+  // };
+
+  // 회원가입
   const checkInfo = e => {
     e.preventDefault();
-    if (checkEmail(email) && checkPwd(pwd)) {
+    if (isAllValid(formValues)) {
       fetch(SIGNUP_API, {
         method: 'POST',
         body: JSON.stringify({
-          email: email,
-          password: pwd,
+          email: formValues.email,
+          password: formValues.password,
         }),
       })
         .then(res => res.json())
@@ -72,8 +94,7 @@ const SignUp = () => {
             history.push('/');
           } else {
             alert('회원가입에 실패하였습니다.');
-            setEmail('');
-            setPwd('');
+            setFormValues({ email: '', password: '' });
           }
         });
     } else {
@@ -87,12 +108,22 @@ const SignUp = () => {
         <Title>회원가입</Title>
         <form onSubmit={checkInfo}>
           <div className="inputWrapper">
-            <Input placeholder="이메일" type="text" onChange={handleEmail} />
+            <Input
+              placeholder="이메일"
+              type="text"
+              name="email"
+              onChange={handleSignupForm}
+            />
+            {/* <Error error={error}>올바른 형식의 이메일을 입력해주세요.</Error> */}
             <Input
               placeholder="비밀번호"
               type="password"
-              onChange={handlePwd}
+              name="password"
+              onChange={handleSignupForm}
             />
+            {/* <Error error={error}>
+              대소문자, 특수문자를 포함한 8자 이상을 입력해주세요.
+            </Error> */}
           </div>
           <div>
             <Label>
@@ -132,7 +163,11 @@ const SignUp = () => {
             </Label>
           </div>
 
-          <EmailBtn email={email} pwd={pwd} checkList={checkList}>
+          <EmailBtn
+            email={formValues.email}
+            password={formValues.password}
+            checkList={checkList}
+          >
             이메일로 가입
           </EmailBtn>
         </form>
@@ -144,8 +179,6 @@ const SignUp = () => {
     </Wrapper>
   );
 };
-
-export default SignUp;
 
 const Wrapper = styled.div`
   ${({ theme }) => theme.flexMixin('center', 'center')};
@@ -199,7 +232,7 @@ const Btn = styled.button`
 `;
 
 const EmailBtn = styled(Btn).attrs(props => ({
-  disabled: !(props.email && props.pwd && props.checkList.length === 2),
+  disabled: !(props.email && props.password && props.checkList.length === 2),
 }))`
   background-color: ${({ theme, disabled }) =>
     disabled ? '#ccc' : theme.colorMain};
@@ -216,3 +249,12 @@ const KakaoBtn = styled(Btn)`
   background-color: #ffd900;
   color: black;
 `;
+
+const Error = styled.div`
+  display: ${({ error }) => (error ? 'block' : 'none')};
+  font-size: 0.7rem;
+  padding-left: 10px;
+  color: tomato;
+`;
+
+export default SignUp;

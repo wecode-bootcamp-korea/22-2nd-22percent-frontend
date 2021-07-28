@@ -4,9 +4,13 @@ export function checkEmail(email) {
   return reg_email.test(email);
 }
 
-export function checkPwd(pwd) {
+export function checkPwd(password) {
   const reg_pwd =
     /^.*(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  return reg_pwd.test(pwd);
+  return reg_pwd.test(password);
 }
+
+export const validator = {
+  email: email => checkEmail(email),
+  password: password => checkPwd(password),
+};
