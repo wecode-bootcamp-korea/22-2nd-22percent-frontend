@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import StyledCheckBox from '../../../components/StyledCheckBox/StyledCheckBox';
 
+import { isOverSeventy } from '../../../utilities/utils';
+
 function IndividualItem({ data, checkedItem, setCheckedItem }) {
   const handleChecked = () => {
     checkedItem.includes(data.index)
@@ -31,9 +33,15 @@ function IndividualItem({ data, checkedItem, setCheckedItem }) {
         {Number(data.amount.toString().slice(0, -4))}만원
       </Cell>
       <Cell percent>
-        <Progress value={data.investmentAmount / data.amount}></Progress>
-        <PercentText value={data.investmentAmount / data.amount}>
-          {data.investmentAmount / data.amount}%
+        <Progress
+          value={data.progress}
+          isOverSeventy={isOverSeventy(data.progress)}
+        />
+        <PercentText
+          value={data.progress}
+          isOverSeventy={isOverSeventy(data.progress)}
+        >
+          {data.progress}%
         </PercentText>
       </Cell>
     </Row>
@@ -65,8 +73,8 @@ const Cell = styled.td`
 
 const PercentText = styled.span`
   margin-top: -5px;
-  color: ${({ theme, value }) =>
-    (value > 69 && '#e73d3d') || (value < 70 && theme.colorMain)};
+  color: ${({ theme, isOverSeventy }) =>
+    isOverSeventy ? '#e73d3d' : theme.colorMain};
   font-weight: 700;
 `;
 
@@ -89,8 +97,8 @@ const Progress = styled.div`
     left: 0;
     width: ${({ value }) => `${value}%`};
     height: 100%;
-    background: ${({ value, theme }) =>
-      (value > 69 && '#e73d3d') || (value < 70 && theme.colorMain)};
+    background: ${({ value, theme, isOverSeventy }) =>
+      isOverSeventy ? '#e73d3d' : theme.colorMain};
   }
 `;
 

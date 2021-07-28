@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { isOverSeventy } from '../../../utilities/utils';
+
 function ProductItem({ data, inProgress, preArranged }) {
   const [_year, month, date] = data.startDate.split('-');
   const investmentAmount =
@@ -16,8 +18,14 @@ function ProductItem({ data, inProgress, preArranged }) {
         </ImgContainer>
         <ItemInfo>
           {inProgress && (
-            <ItemPercent>
-              <PercentGraph percent={data.progress}></PercentGraph>
+            <ItemPercent
+              percent={data.progress}
+              isOverSeventy={isOverSeventy(data.progress)}
+            >
+              <PercentGraph
+                percent={data.progress}
+                isOverSeventy={isOverSeventy(data.progress)}
+              ></PercentGraph>
               <span>{data.progress}% 모집</span>
             </ItemPercent>
           )}
@@ -81,7 +89,8 @@ const ItemInfo = styled.div`
 const ItemPercent = styled.div`
   ${({ theme }) => theme.flexMixin};
   margin-bottom: 10px;
-  color: ${({ theme }) => theme.colorMain};
+  color: ${({ theme, isOverSeventy }) =>
+    isOverSeventy ? '#e73d3d' : theme.colorMain};
   font-weight: 700;
 
   i {
@@ -90,13 +99,17 @@ const ItemPercent = styled.div`
 `;
 
 const PercentGraph = styled.div`
-  border: 1px solid ${({ theme }) => theme.colorMain};
+  border: 1px solid
+    ${({ theme, isOverSeventy }) =>
+      isOverSeventy ? '#e73d3d' : theme.colorMain};
   margin-right: 10px;
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: ${({ theme, percent }) =>
-    `conic-gradient(${theme.colorMain} 0% ${percent}%, #fff ${percent}% 100%)`};
+  background: ${({ theme, percent, isOverSeventy }) =>
+    `conic-gradient(${
+      isOverSeventy ? '#e73d3d' : theme.colorMain
+    } 0% ${percent}%, #fff ${percent}% 100%)`};
 `;
 
 const ItemNotice = styled.div`
