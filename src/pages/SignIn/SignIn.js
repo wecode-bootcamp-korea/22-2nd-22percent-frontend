@@ -21,7 +21,7 @@ const SignIn = () => {
           .then(response => response.json())
           .then(result => {
             localStorage.setItem('accessToken', result.accessToken);
-            alert('회원가입 성공');
+            alert('로그인 성공');
             history.push('/');
           });
       },
