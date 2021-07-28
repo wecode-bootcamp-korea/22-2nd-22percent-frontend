@@ -5,7 +5,6 @@ const SLIDE_BG_COLOR = [
   '#C1866E',
   '#CC8C2D',
   '#79789C',
-  '#DFECF1',
   '#b993bf',
 ];
 

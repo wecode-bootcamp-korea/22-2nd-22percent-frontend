@@ -6,9 +6,11 @@ import ProductList from '../../components/ProductList/ProductList';
 import AccBox from './AccBox/AccBox';
 
 import { BASE_URL, MORTGAGE } from '../../config';
+import { SLIDE_BG_COLOR } from './MainSlide/slideBgColor';
 
 function Main() {
   const [progress, setProgress] = useState(null);
+  const [slide, setSlide] = useState(null);
   const [scheduled, setScheduled] = useState(null);
 
   useEffect(() => {
@@ -16,16 +18,15 @@ function Main() {
       .then(res => res.json())
       .then(res => {
         setProgress(res.recruitingResults);
+        setSlide(res.recruitingResults.slice(0, SLIDE_BG_COLOR.length));
         setScheduled(res.scheduledResults);
       });
   }, []);
 
   return (
     <Container>
-      {progress && (
-        <MainSlide
-          slide={[progress[progress.length - 1], ...progress, progress[0]]}
-        />
+      {slide && (
+        <MainSlide slide={[slide[slide.length - 1], ...slide, slide[0]]} />
       )}
       <Inner>
         {progress && (
