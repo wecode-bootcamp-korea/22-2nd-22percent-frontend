@@ -4,22 +4,41 @@ import OverviewLeftTop from './OverviewLeftTop';
 import OverviewRightTop from './OverviewRightTop';
 import OverviewLeftBottom from './OverviewLeftBottom';
 import OverviewRightBottom from './OverviewRightBottom';
+import Modal from './Modal';
 import { isValidObject } from '../../../utilities/utils';
+import { PORTFOLIO_API, SUMMARY_API } from '../../../config';
 
 function Overview() {
   const [summary, setSummary] = useState({});
   const [portfolio, setPortfolio] = useState({});
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
+  useEffect(e => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: localStorage.getItem('accessToken'),
+      },
+    };
     // Promise.all
     // Promise.allSettled
-    fetch('/data/investmentSummaryView.json')
+    fetch(SUMMARY_API, requestOptions)
       .then(res => res.json())
       .then(res => setSummary(res.results));
-    fetch('/data/portfolioView.json')
+    fetch(PORTFOLIO_API, requestOptions)
       .then(res => res.json())
       .then(res => setPortfolio(res.results));
   }, []);
+
+  //모달창 열기
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  //모달창 닫기
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     isValidObject(summary) &&
@@ -31,7 +50,7 @@ function Overview() {
               <OverviewLeftTop deposit={summary.deposit} />
             </OverviewLeft>
             <OverviewRight>
-              <OverviewRightTop summary={summary} />
+              <OverviewRightTop summary={summary} openModal={openModal} />
             </OverviewRight>
           </OverviewBox>
           <OverviewBox>
@@ -43,6 +62,7 @@ function Overview() {
             </OverviewRight>
           </OverviewBox>
         </OverviewGrid>
+        {isModalOpen && <Modal closeModal={closeModal} />}
       </Wrapper>
     )
   );

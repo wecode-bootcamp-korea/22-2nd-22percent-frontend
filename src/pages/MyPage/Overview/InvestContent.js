@@ -51,16 +51,24 @@ function InvestContent({ investStatus, currentData }) {
         </ChartSubtitle>
       </Chart>
       <ChartDesc>
-        {ConvertToChartData.map(([title, totalValue]) => (
+        {ConvertToChartData.map(([title, totalValue], idx) => (
           <DescContent key={title}>
-            <div>{title}</div>
-            <span>{totalValue.toLocaleString()}원</span>
+            <Circle className="fas fa-circle" color={idx}></Circle>
+            <ChartTitle>{title}</ChartTitle>
+            <ChartValue>{totalValue.toLocaleString()}원</ChartValue>
           </DescContent>
         ))}
       </ChartDesc>
     </InvestContentBox>
   );
 }
+
+const COLOR_LIST = {
+  0: '#6C3AD3',
+  1: '#B0B0F5',
+  2: '#DEDEF4',
+  3: '#D2D2D2',
+};
 
 const NAME_MATCH = {
   totalInvest: '누적 투자 원금',
@@ -110,6 +118,22 @@ const DescContent = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+`;
+
+const Circle = styled.i`
+  font-size: 0.5rem;
+  color: ${({ color }) => COLOR_LIST[color]};
+`;
+
+const ChartTitle = styled.div`
+  text-align: left;
+  width: 100%;
+  padding-left: 10px;
+`;
+
+const ChartValue = styled.div`
+  text-align: right;
+  width: 100%;
 `;
 
 const ChartDesc = styled.div`

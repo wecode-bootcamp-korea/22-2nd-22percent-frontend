@@ -15,7 +15,7 @@ function OverviewRightBottom({ portfolio }) {
         <div className="title">
           <h3>포트폴리오 현황</h3>
           <p>
-            {portfolio.grade.amount
+            {portfolio.grade.amounts
               .reduce((pre, cur) => pre + cur, 0)
               .toLocaleString()}
             원
@@ -43,7 +43,7 @@ function OverviewRightBottom({ portfolio }) {
 const STATUS_BTN = [
   ['grade', '등급'],
   ['earningRate', '수익률'],
-  ['type', '상품'],
+  ['category', '상품'],
 ];
 
 const Box = styled.div`
