@@ -1,19 +1,25 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 function InvestmentBtn({ checkedItem }) {
-  const handleClickInvest = () => {
-    console.log(checkedItem);
-    //버튼 기능 구현 필요
+  const handleClickInvest = items => {
+    const queryStr = items.reduce((acc, crr, idx) => {
+      if (idx === 0) return acc + crr;
+      return acc + ' ' + crr;
+    }, 'deals=');
+    return `?${queryStr}`;
   };
 
   return (
-    <Container>
-      <Button onClick={handleClickInvest}>
-        <Amount>{checkedItem.length}개 상품</Amount>
-        <BtnText>투자하기</BtnText>
-      </Button>
-    </Container>
+    <Link to={`/investments/apply${handleClickInvest(checkedItem)}`}>
+      <Container>
+        <Button>
+          <Amount>{checkedItem.length}개 상품</Amount>
+          <BtnText>투자하기</BtnText>
+        </Button>
+      </Container>
+    </Link>
   );
 }
 

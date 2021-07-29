@@ -15,9 +15,10 @@ function ProductList({
 
   const handleInvestAll = () => {
     const selecetedList = progress.map(item => item.index);
-    const queryStr = selecetedList.reduce((acc, crr) => {
+    const queryStr = selecetedList.reduce((acc, crr, idx) => {
+      if (idx === 0) return acc + crr;
       return acc + ' ' + crr;
-    }, '');
+    }, 'deals=');
     return `?${queryStr}`;
   };
 
