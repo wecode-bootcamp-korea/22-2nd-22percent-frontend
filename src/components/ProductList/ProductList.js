@@ -13,11 +13,19 @@ function ProductList({
 }) {
   const location = useLocation();
 
+  const handleInvestAll = () => {
+    const selecetedList = progress.map(item => item.index);
+    const queryStr = selecetedList.reduce((acc, crr) => {
+      return acc + ' ' + crr;
+    }, '');
+    return `?${queryStr}`;
+  };
+
   return (
     <Container>
       <Product>
         {location.pathname === '/deals/real-estate' && inProgress && (
-          <Link to={`/investments/apply`}>
+          <Link to={`/investments/apply${handleInvestAll()}`}>
             <Button>전체 투자</Button>
           </Link>
         )}
