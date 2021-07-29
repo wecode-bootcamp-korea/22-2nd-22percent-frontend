@@ -1,41 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Pagination({ pageClick, totalPage, currentPage }) {
-  let slicedArray = [];
-  const pagination = arr => {
-    for (let i = 0; i < arr.length; i += 10) {
-      slicedArray.push(arr.slice(i, i + 10));
-    }
-    return slicedArray;
-  };
-
+export default function Pagination({
+  pages,
+  pageClick,
+  currentPage,
+  changePage,
+}) {
   return (
     <PageWrapper>
+      <ChangeBtn onClick={changePage} id="prev">
+        <i className="fas fa-arrow-left" />
+      </ChangeBtn>
       <PageListBox>
-        <PageBtn>
-          <i className="fas fa-arrow-left"></i>
-        </PageBtn>
-        <Prev>
-          <i className="fas fa-chevron-left"></i>
-        </Prev>
-      </PageListBox>
-      <PageListBox>
-        {pagination(totalPage)[Math.floor(currentPage / 10)].map(page => (
-          <PageBtn id={page} key={page} onClick={pageClick}>
-            {page}
-          </PageBtn>
-        ))}
+        {pages.map(page => {
+          return (
+            <PageBtn
+              isSelectedPage={currentPage === page}
+              id={page}
+              key={page}
+              onClick={pageClick}
+            >
+              {page}
+            </PageBtn>
+          );
+        })}
       </PageListBox>
 
-      <PageListBox>
-        <Next>
-          <i className="fas fa-chevron-right"></i>
-        </Next>
-        <PageBtn>
-          <i className="fas fa-arrow-right"></i>
-        </PageBtn>
-      </PageListBox>
+      <ChangeBtn onClick={changePage} name="next">
+        <i className="fas fa-arrow-right" />
+      </ChangeBtn>
     </PageWrapper>
   );
 }
@@ -53,9 +47,9 @@ const PageBtn = styled.li`
   width: 40px;
   height: 40px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-right: none;
-  color: #ccc;
+  color: ${({ isSelectedPage }) => (isSelectedPage ? 'black' : '#ccc')};
+  border: ${({ isSelectedPage }) =>
+    isSelectedPage ? '1px solid black' : '1px solid #ccc'};
   text-align: center;
   cursor: pointer;
 
@@ -69,11 +63,19 @@ const PageBtn = styled.li`
   }
 `;
 
-const Prev = styled(PageBtn)`
-  margin-right: 40px;
-  border-right: 1px solid #ccc;
-`;
+const ChangeBtn = styled.button`
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  color: #ccc;
+  background: transparent;
+  text-align: center;
+  cursor: pointer;
 
-const Next = styled(PageBtn)`
-  margin-left: 40px;
+  &:hover {
+    border: 1px solid black;
+    color: black;
+  }
 `;

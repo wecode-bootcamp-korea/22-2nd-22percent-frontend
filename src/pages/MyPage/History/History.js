@@ -6,15 +6,20 @@ import Pagination from './Pagination';
 import { HISTORY_API } from '../../../config';
 import { isValidObject } from '../../../utilities/utils';
 
+const LIMIT = 10;
+
 function History() {
   const [investLog, setInvestLog] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState([]);
-  const [currentStatus, setCurrentStatus] = useState(0);
+  const [currentStatus, setCurrentStatus] = useState('0');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const LIMIT = 10;
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  useEffect(() => {
     const offset = currentPage - 1;
     const requestOptions = {
       method: 'GET',
@@ -22,6 +27,11 @@ function History() {
         Authorization: localStorage.getItem('accessToken'),
       },
     };
+
+    // const opt = {
+    //   search,
+    //   ...(currentStatus > 0 && { status: currentStatus }),
+    // };
 
     if (currentStatus > 0) {
       fetch(
@@ -57,7 +67,7 @@ function History() {
 
   // 페이지네이션의 버튼 클릭시 페이지 이동을 위한 setState
   const pageClick = e => {
-    setCurrentPage(e.target.id);
+    setCurrentPage(+e.target.id);
   };
 
   // 페이지네이션을 위한 페이지 배열 만들기
@@ -67,6 +77,39 @@ function History() {
       pageArray.push(i);
     }
     setTotalPage(pageArray);
+  };
+
+  // 페이지네이션 ㅠㅠ
+  const prevPage = Math.floor((currentPage - 1) / 10) * 10;
+
+  const makePageInfo = () => {
+    let pageArr = [];
+    const pagination = () => {
+      for (let i = 0; i < totalPage.length; i += 10) {
+        pageArr.push(totalPage.slice(i, i + 10));
+      }
+      return pageArr;
+    };
+
+    const currentGroup =
+      pagination(pageArr)[Math.floor((currentPage - 1) / 10)];
+
+    let pageInfo = {
+      arr: currentGroup.map(el => el),
+      perv: prevPage ? prevPage : null,
+      next: prevPage + 11 <= totalPage.length ? prevPage + 11 : null,
+    };
+
+    return pageInfo;
+  };
+
+  totalPage.length > 0 && makePageInfo();
+
+  // 페이지네이션 -> 이전 페이지, 다음페이지 클릭시 페이지 이동
+  const changePage = e => {
+    e.target.id === 'prev'
+      ? setCurrentPage(makePageInfo()?.perv)
+      : setCurrentPage(makePageInfo()?.next);
   };
 
   // 투자상태값을 기준으로 필터링하기 위한 setState
@@ -80,14 +123,17 @@ function History() {
         <HistoryWrapper>
           <div>
             <SearchBar onChange={searchChange}>
-              <i class="fas fa-search" />
+              <i className="fas fa-search" />
               <input
                 type="text"
                 placeholder="상품호수 또는 상품명을 검색해보세요"
               />
             </SearchBar>
             <HistoryMain>
-              <HistoryHeader filterHandler={filterHandler} />
+              <HistoryHeader
+                filterHandler={filterHandler}
+                currentStatus={currentStatus}
+              />
               <PaymentSummary>
                 {investLog.summary.total > 0
                   ? Object.entries(investLog.summary)
@@ -96,18 +142,22 @@ function History() {
                         <li key={item[0]}>
                           <div>
                             <h3>{item[0]}</h3>
-                            <span>{item[1].toLocaleString()}원</span>
+                            <span>{item[1]?.toLocaleString()}원</span>
                           </div>
                         </li>
                       ))
                   : '데이터가 존재하지 않습니다.'}
               </PaymentSummary>
               <HistoryTable investLogItems={investLog.items} />
-              <Pagination
-                pageClick={pageClick}
-                totalPage={totalPage}
-                currentPage={currentPage}
-              />
+              {totalPage.length && (
+                <Pagination
+                  pages={makePageInfo()?.arr}
+                  pageClick={pageClick}
+                  totalPage={totalPage}
+                  currentPage={currentPage}
+                  changePage={changePage}
+                />
+              )}
             </HistoryMain>
           </div>
         </HistoryWrapper>
