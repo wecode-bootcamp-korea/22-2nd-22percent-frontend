@@ -20,7 +20,7 @@ function PastProductList({ closed, fetchClosed, closedQuantity }) {
       <Title>지난 투자 상품</Title>
       <ProductList>
         {closed.map((li, i) => (
-          <PastProductItem data={li} key={i} />
+          <PastProductItem closedItem={li} key={i} />
         ))}
       </ProductList>
       {Number(queryObj.offset) + Number(queryObj.limit) < closedQuantity && (

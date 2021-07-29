@@ -6,7 +6,7 @@ function InvestmentBtn({ checkedItem }) {
   const handleClickInvest = items => {
     const queryStr = items.reduce((acc, crr, idx) => {
       if (idx === 0) return acc + crr;
-      return acc + ' ' + crr;
+      return acc + ',' + crr;
     }, 'deals=');
     return `?${queryStr}`;
   };

@@ -2,21 +2,23 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function PastProductItem({ data }) {
-  const amount = Number(data.amount.toString().slice(0, -4)).toLocaleString();
+function PastProductItem({ closedItem }) {
+  const amount = Number(
+    closedItem.amount.toString().slice(0, -4)
+  ).toLocaleString();
 
   return (
-    <Link to={`/deals/${data.index}`}>
+    <Link to={`/deals/${closedItem.index}`}>
       <ProductItem>
         <ImgContainer>
-          <img alt="real estate" src={data.titleImage} />
+          <img alt="real estate" src={closedItem.titleImage} />
         </ImgContainer>
         <div>
-          <ProductTitle>{data.title}</ProductTitle>
+          <ProductTitle>{closedItem.title}</ProductTitle>
           <ProductDesc>
             <span>
-              <b>{Number(data.earningRate).toFixed(1)}%</b>
-              {amount}만원 · {data.period}개월
+              <b>{Number(closedItem.earningRate).toFixed(1)}%</b>
+              {amount}만원 · {closedItem.period}개월
             </span>
           </ProductDesc>
         </div>

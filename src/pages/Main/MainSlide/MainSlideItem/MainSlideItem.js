@@ -4,28 +4,28 @@ import styled from 'styled-components';
 
 import { SLIDE_BG_COLOR } from '../slideBgColor';
 
-function MainSlideItem({ bgIdx, data }) {
+function MainSlideItem({ bgIdx, slide }) {
   return (
     <SlideItem bgIdx={bgIdx}>
       <Inner>
         <Info>
-          <SlideTitle>{data.title}</SlideTitle>
+          <SlideTitle>{slide.title}</SlideTitle>
           <Desc>
             <InterestPercent>
-              <b>{Number(data.earningRate).toFixed(1)}</b>%
+              <b>{Number(slide.earningRate).toFixed(1)}</b>%
             </InterestPercent>
             <span>
-              {data.period}개월 /{' '}
-              {Number(data.amount.toString().slice(0, -4)).toLocaleString()}
+              {slide.period}개월 /{' '}
+              {Number(slide.amount.toString().slice(0, -4)).toLocaleString()}
               만원
             </span>
           </Desc>
-          <Link to={`/deals/${data.index}`}>
+          <Link to={`/deals/${slide.index}`}>
             <Button bgIdx={bgIdx}>상품 보러가기</Button>
           </Link>
         </Info>
         <div>
-          <img alt="real estate" src={data.titleImage} />
+          <img alt="real estate" src={slide.titleImage} />
         </div>
       </Inner>
     </SlideItem>

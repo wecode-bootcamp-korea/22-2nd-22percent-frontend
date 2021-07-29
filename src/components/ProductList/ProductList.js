@@ -17,7 +17,7 @@ function ProductList({
     const selecetedList = progress.map(item => item.index);
     const queryStr = selecetedList.reduce((acc, crr, idx) => {
       if (idx === 0) return acc + crr;
-      return acc + ' ' + crr;
+      return acc + ',' + crr;
     }, 'deals=');
     return `?${queryStr}`;
   };
@@ -35,7 +35,7 @@ function ProductList({
           {inProgress &&
             progress.map((li, i) => (
               <ProductItem
-                data={li}
+                product={li}
                 inProgress={inProgress}
                 preArranged={preArranged}
                 key={i}
@@ -44,7 +44,7 @@ function ProductList({
           {preArranged &&
             scheduled.map((li, i) => (
               <ProductItem
-                data={li}
+                product={li}
                 inProgress={inProgress}
                 preArranged={preArranged}
                 key={i}

@@ -45,7 +45,7 @@ function Main() {
     const month = newDate.getMonth();
     const date = newDate.getDate();
 
-    setToday({ year, month, date });
+    setToday({ year, month: month + 1, date });
     fetchData(
       LOAN_AMOUNT,
       {

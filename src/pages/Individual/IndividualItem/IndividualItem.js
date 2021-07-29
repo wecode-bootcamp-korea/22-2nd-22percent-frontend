@@ -4,44 +4,46 @@ import StyledCheckBox from '../../../components/StyledCheckBox/StyledCheckBox';
 
 import { isOverSeventy } from '../../../utilities/utils';
 
-function IndividualItem({ data, checkedItem, setCheckedItem }) {
+function IndividualItem({ individualItem, checkedItem, setCheckedItem }) {
   const handleChecked = () => {
-    checkedItem.includes(data.index)
-      ? setCheckedItem(checkedItem.filter(item => item !== data.index))
-      : setCheckedItem([...checkedItem, data.index]);
+    checkedItem.includes(individualItem.index)
+      ? setCheckedItem(
+          checkedItem.filter(item => item !== individualItem.index)
+        )
+      : setCheckedItem([...checkedItem, individualItem.index]);
   };
 
   return (
     <Row>
       <Cell>
         <StyledCheckBox
-          isChecked={checkedItem.includes(data.index)}
+          isChecked={checkedItem.includes(individualItem.index)}
           handleChecked={handleChecked}
         />
       </Cell>
-      <Cell productId>{data.index}호</Cell>
+      <Cell productId>{individualItem.index}호</Cell>
       <Cell loanType bigFont>
-        {data.title}
+        {individualItem.title}
       </Cell>
       <CellGrade>
-        <GradeBg grade={data.grade}>{data.grade}</GradeBg>
+        <GradeBg grade={individualItem.grade}>{individualItem.grade}</GradeBg>
       </CellGrade>
-      <Cell bigFont>{data.earningRate}%</Cell>
-      <Cell bigFont>{data.period}개월</Cell>
+      <Cell bigFont>{individualItem.earningRate}%</Cell>
+      <Cell bigFont>{individualItem.period}개월</Cell>
       <Cell bigFont>
-        {Number(data.investmentAmount.toString().slice(0, -4))}만원 /{' '}
-        {Number(data.amount.toString().slice(0, -4))}만원
+        {Number(individualItem.investmentAmount.toString().slice(0, -4))}만원 /{' '}
+        {Number(individualItem.amount.toString().slice(0, -4))}만원
       </Cell>
       <Cell percent>
         <Progress
-          value={data.progress}
-          isOverSeventy={isOverSeventy(data.progress)}
+          value={individualItem.progress}
+          isOverSeventy={isOverSeventy(individualItem.progress)}
         />
         <PercentText
-          value={data.progress}
-          isOverSeventy={isOverSeventy(data.progress)}
+          value={individualItem.progress}
+          isOverSeventy={isOverSeventy(individualItem.progress)}
         >
-          {data.progress}%
+          {individualItem.progress}%
         </PercentText>
       </Cell>
     </Row>
