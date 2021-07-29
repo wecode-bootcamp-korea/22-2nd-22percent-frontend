@@ -2,6 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 export default function Pagination({ pageClick, totalPage, currentPage }) {
+  let slicedArray = [];
+  const pagination = arr => {
+    for (let i = 0; i < arr.length; i += 10) {
+      slicedArray.push(arr.slice(i, i + 10));
+    }
+    return slicedArray;
+  };
+
   return (
     <PageWrapper>
       <PageListBox>
@@ -13,7 +21,7 @@ export default function Pagination({ pageClick, totalPage, currentPage }) {
         </Prev>
       </PageListBox>
       <PageListBox>
-        {totalPage.map(page => (
+        {pagination(totalPage)[Math.floor(currentPage / 10)].map(page => (
           <PageBtn id={page} key={page} onClick={pageClick}>
             {page}
           </PageBtn>
