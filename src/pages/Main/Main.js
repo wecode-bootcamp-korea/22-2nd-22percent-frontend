@@ -5,9 +5,9 @@ import MainSlide from './MainSlide/MainSlide';
 import ProductList from '../../components/ProductList/ProductList';
 import AccBox from './AccBox/AccBox';
 
-import { SLIDE_BG_COLOR } from './MainSlide/slideBgColor';
-import { BASE_URL, MORTGAGE, LOAN_AMOUNT } from '../../config';
-import { isValidObject } from '../../utilities/utils';
+import { LOAN_AMOUNT, MORTGAGE } from '../../config';
+import { getToken } from '../../utilities/token';
+import fetchData from '../../utilities/fetch';
 
 function Main() {
   const [progress, setProgress] = useState(null);
@@ -18,13 +18,22 @@ function Main() {
   const [accInfo, setAccInfo] = useState({});
 
   useEffect(() => {
-    fetch(`${BASE_URL}${MORTGAGE}`)
-      .then(res => res.json())
-      .then(res => {
-        setProgress(res.recruitingResults);
-        setSlide(res.recruitingResults.slice(0, SLIDE_BG_COLOR.length));
-        setScheduled(res.scheduledResults);
-      });
+    fetchData(
+      MORTGAGE,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          setProgress(res.recruitingResults);
+          setSlide(res.recruitingResults.slice(0, SLIDE_BG_COLOR.length));
+          setScheduled(res.scheduledResults);
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -35,17 +44,21 @@ function Main() {
     const date = newDate.getDate();
 
     setToday({ year, month, date });
-
-    fetch(`${BASE_URL}${LOAN_AMOUNT}`)
-      .then(res => res.json())
-      .then(res => {
-        const { loanAcc, avgPerPerson, investAcc } = res.result;
-        setAccInfo({
-          loanAcc,
-          avgPerPerson,
-          investAcc,
-        });
-      });
+    fetchData(
+      LOAN_AMOUNT,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          const { loanAcc, avgPerPerson, investAcc } = res.result;
+          setAccInfo({ loanAcc, avgPerPerson, investAcc });
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
   }, []);
 
   return (

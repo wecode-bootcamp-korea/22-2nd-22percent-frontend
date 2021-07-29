@@ -7,12 +7,14 @@ import EmptyIndividual from './EmptyIndividual/EmptyIndividual';
 import StyledCheckBox from '../../components/StyledCheckBox/StyledCheckBox';
 import InvestmentBtn from './InvestmentBtn/InvestmentBtn';
 
-import { BASE_URL, INDIVIDUAL } from '../../config';
+import { INDIVIDUAL } from '../../config';
 import {
   GRADE_BAR_RANGE,
   EARNING_BAR_RANGE,
   GRADE_CONVERSION,
 } from './IndividualFilter/filterRange';
+import fetchData from '../../utilities/fetch';
+import { getToken } from '../../utilities/token';
 
 function Individual() {
   const [individual, setIndividual] = useState(null);
@@ -35,12 +37,21 @@ function Individual() {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    fetch(`${BASE_URL}${INDIVIDUAL}`)
-      .then(res => res.json())
-      .then(res => {
-        setIndividual(res.results);
-        setCopyIndividual(res.results);
-      });
+    fetchData(
+      INDIVIDUAL,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          setIndividual(res.results);
+          setCopyIndividual(res.results);
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
   }, []);
 
   const handleFilter = (grade, earningPercent, inputValue, direction) => {

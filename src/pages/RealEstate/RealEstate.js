@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import ProductList from '../../components/ProductList/ProductList';
 import PastProductList from './PastProductList/PastProductList';
 
-import { BASE_URL, MORTGAGE } from '../../config';
+import { MORTGAGE } from '../../config';
 import { stringToQuery } from '../../utilities/query';
+import fetchData from '../../utilities/fetch';
+import { getToken } from '../../utilities/token';
 
 function RealEstate() {
   const [progress, setProgress] = useState(null);
@@ -17,32 +19,57 @@ function RealEstate() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch(`${BASE_URL}${MORTGAGE}`)
-      .then(res => res.json())
-      .then(res => {
-        setProgress(res.recruitingResults);
-        setScheduled(res.scheduledResults);
-      });
+    fetchData(
+      MORTGAGE,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          setProgress(res.recruitingResults);
+          setScheduled(res.scheduledResults);
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
 
-    fetch(`${BASE_URL}${MORTGAGE}&closed=true&offset=0&limit=8`)
-      .then(res => res.json())
-      .then(res => {
-        setClosed(res.results);
-        setClosedQuantity(res.count);
-      });
+    fetchData(
+      `${MORTGAGE}&closed=true&offset=0&limit=8`,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          setClosed(res.results);
+          setClosedQuantity(res.count);
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
   }, []);
 
   const fetchClosed = () => {
     const queryObj = stringToQuery(history.location.search);
 
-    fetch(
-      `${BASE_URL}${MORTGAGE}&closed=true&offset=${queryObj.offset}&limit=8`
-    )
-      .then(res => res.json())
-      .then(res => {
-        Number(queryObj.offset !== 0) &&
-          setClosed(prev => [...prev, ...res.results]);
-      });
+    fetchData(
+      `${MORTGAGE}&closed=true&offset=${queryObj.offset}&limit=8`,
+      {
+        headers: { Authorization: getToken() },
+      },
+      {
+        onSuccess: res => {
+          Number(queryObj.offset !== 0) &&
+            setClosed(prev => [...prev, ...res.results]);
+        },
+        onReject: res => {
+          alert(res);
+        },
+      }
+    );
   };
 
   return (
