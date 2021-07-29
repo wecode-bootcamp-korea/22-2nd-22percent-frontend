@@ -82,8 +82,7 @@ const SignUp = () => {
       fetch(SIGNUP_API, {
         method: 'POST',
         body: JSON.stringify({
-          email: formValues.email,
-          password: formValues.password,
+          ...formValues,
         }),
       })
         .then(res => res.json())

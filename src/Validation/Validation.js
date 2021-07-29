@@ -11,6 +11,6 @@ export function checkPwd(password) {
 }
 
 export const validator = {
-  email: email => checkEmail(email),
-  password: password => checkPwd(password),
+  email: checkEmail,
+  password: checkPwd,
 };
