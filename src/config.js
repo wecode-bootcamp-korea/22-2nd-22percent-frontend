@@ -5,7 +5,7 @@ export const MORTGAGE = '/deals?category=mortgage';
 export const INDIVIDUAL = '/deals?category=individual';
 export const LOAN_AMOUNT = '/deals/loan-amount';
 
-export const INVESTMENTSINFO_API = `http://${IP_ADDRESS}:8000/investments?deals=1&deals=61`;
+export const INVESTMENTSINFO_API = `http://${IP_ADDRESS}:8000/investments?deals=1%2030%2060]`;
 export const SIGNUP_API = `http://${IP_ADDRESS}:8000/users/signup`;
 export const SIGNIN_API = `http://${IP_ADDRESS}:8000/users/signin`;
 export const KAKAO_API = `http://${IP_ADDRESS}:8000/users/signin/kakao`;

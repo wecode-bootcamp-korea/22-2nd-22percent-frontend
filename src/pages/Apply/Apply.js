@@ -1,8 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect, useSelector } from 'react';
 import styled from 'styled-components';
 import ApplyInput from './ApplyInput/ApplyInput';
+import { INVESTMENTSINFO_API } from '../../config';
+import { getToken } from '../../utilities/token';
 
-function Apply() {
+function Apply(props) {
+  const [applyInput, setApplyInput] = useState([]);
+  const [investmentLength, setInvestmentLength] = useState(0);
+  const [checkedItem, setCheckedItem] = useState([]);
+  //console.log(applyInput);
+  useEffect(() => {
+    //deleted
+    // localStorage.setItem(TOKEN_KEY, 'hhhhhhhhhhh');
+    const authToken = getToken();
+    fetch(`${INVESTMENTSINFO_API}${props.location.search}`, {
+      //props.location.search가 들어온다
+      headers: {
+        Authorization: authToken,
+      },
+    })
+      //.then(res => console.log(res));
+      .then(res => res.json())
+      .then(res => setApplyInput(res.investInfo));
+  }, []);
+  // 개별선택
+  const handleCheckItem = (e, productId) => {
+    if (e.target.checked) {
+      setCheckedItem([...checkedItem, productId]);
+    } else {
+      setCheckedItem(checkedItem.filter(checkedId => checkedId !== productId));
+    }
+  };
+
+  //전체선택
+  // const { posts } = useSelector(state => state.sample);
+
+  console.log();
   return (
     <Container>
       <Header>
@@ -14,11 +47,11 @@ function Apply() {
             <CardInput>
               <div>
                 <label>
-                  <input type="checkbox" />
+                  <input type="checkbox" name="allCheck" />
                   <CheckAreaLabel>
                     <img
                       src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxNCAxMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+RjlCMzRFNUYtMzRDNS00RDcxLUFDNDYtNkRBQzBBNkUxRDlCPC90aXRsZT48cGF0aCBkPSJNMSA0LjgwOGw0LjAzNCAzLjkwNkwxMyAxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iI0ZGRiIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+"
-                      alt=""
+                      alt="checkbox"
                     />
                   </CheckAreaLabel>
                   <CardInputLabelName>전체선택</CardInputLabelName>
@@ -30,19 +63,42 @@ function Apply() {
                 </select>
               </SelectWrap>
             </CardInput>
-            <ApplyInput />
-            <ApplyInput />
-            <ApplyInput />
-            <ApplyInput />
+            {[...Array(5)].map((el, idx) => (
+              <input
+                type="checkbox"
+                onChange={idx => handleCheckItem(idx)}
+                checked={checkedItem.includes(idx)}
+              />
+            ))}
+            {/* {applyInput &&
+              applyInput.map((applyInput, idx) => (
+                <ApplyInput
+                  investName={applyInput.name}
+                  investOption={applyInput.investmentOption}
+                  investCategory={applyInput.category}
+                  investGrade={applyInput.grade}
+                  investEarningRate={applyInput.earningRate}
+                  investRepaymentPeriod={applyInput.repaymentPeriod}
+                  //investCheckedItems={checkdItemHandler}
+                />
+              ))} */}
           </CardHead>
           <Summary>
             <SummaryWrap>
               <SummaryWraplabel>투자 상품</SummaryWraplabel>
-              <SummaryValue>총 1/1건</SummaryValue>
+              {applyInput && (
+                <SummaryValue>
+                  총 {investmentLength}/{applyInput.length}건
+                </SummaryValue>
+              )}
             </SummaryWrap>
             <SummaryWrap>
               <SummaryWraplabel>총 투자 금액</SummaryWraplabel>
-              <SummaryValue className="acount">10,000원</SummaryValue>
+              {applyInput && (
+                <SummaryValue className="acount">
+                  {applyInput.amount}원
+                </SummaryValue>
+              )}
             </SummaryWrap>
           </Summary>
         </form>
@@ -64,9 +120,9 @@ function Apply() {
             <Title>최종 투자 금액</Title>
             <FinalWrap>
               <p>총 투자 금액</p>
-              <p>5,000 원</p>
+              <p>원</p>
             </FinalWrap>
-            <FinalWrap>
+            {/* <FinalWrap>
               <p className="fianl-label">사용 포인트</p>
               <FinalPointInput>
                 <FianlPointUseAll>
@@ -80,11 +136,11 @@ function Apply() {
             </FinalWrap>
             <div className="final-wrap final-end">
               <p>잔여: 0P</p>
-            </div>
+            </div> */}
           </Final>
           <Total>
             <div>사용 예치금</div>
-            <TotalValue>10,000 원</TotalValue>
+            {applyInput && <TotalValue>{applyInput.amount}원</TotalValue>}
           </Total>
         </form>
       </Card>
@@ -105,6 +161,7 @@ const BtnWrap = styled.div`
     height: 60px;
     font-size: 16px;
     font-weight: bold;
+    cursor: pointer;
     &:hover {
       transition: 0.3s all;
       background: #5234ad;
@@ -336,7 +393,7 @@ const Container = styled.main`
   ${({ theme }) => theme.flexMixin('normal', 'center')};
   background: #f4f4f4;
   flex-direction: column;
-  padding: 60px 20px 120px;
+  padding: 120px 20px 120px;
 `;
 
 const HeaderTitle = styled.p`

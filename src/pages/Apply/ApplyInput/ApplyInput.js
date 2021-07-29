@@ -2,30 +2,38 @@ import React, { Component } from 'react';
 import { ReactComponent as CheckImg } from './CheckImg.svg';
 import styled from 'styled-components';
 
-function ApplyInput() {
+function ApplyInput(props) {
+  console.log(props.investName);
+  //console.log(props.investCheckedItems);
   return (
     <CardInput>
       <div className="checkable-area">
         <label>
-          <input type="checkbox" id="allControl" className="form-checkable" />
+          <input
+            type="checkbox"
+            id="allControl"
+            className="form-checkable"
+            onCange={e => props.investCheckedItems(e)}
+          />
           <CheckAreaLabel>
             <CheckImg />
           </CheckAreaLabel>
-          <span className="label-name deal-name">
-            주거안정 356호 인천 송도더샵퍼스트월드
-          </span>
+          <span className="label-name deal-name">{props.investName}</span>
         </label>
         <DealInfo>
           <DealTextGroup>
             <DealIndex>41204호</DealIndex>
-            <p>A</p>
-            <p>8.3%</p>
-            <p>12개월</p>
+            <p>{props.investGrade}</p>
+            <p>{props.investEarningRate}%</p>
+            <p>{props.investRepaymentPeriod}개월</p>
           </DealTextGroup>
         </DealInfo>
       </div>
       <SelectWrap>
         <select className="form-control">
+          {props.investOption.map(investOption => (
+            <option value={investOption}>{investOption}</option>
+          ))}
           <option value="5000">0.5만원</option>
         </select>
       </SelectWrap>
