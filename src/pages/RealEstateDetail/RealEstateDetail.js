@@ -23,43 +23,43 @@ const RealEstateDetail = ({ match }) => {
       });
   }, []);
   return (
-    <main>
+    <Main>
       {dealInfo && mortgageInfo && (
         <>
-          <Slide />
+          <Slide mortgageImage={mortgageInfo.mortgageImage} />
           <DealHeader
-            dealInfoName={dealInfo[0].name}
-            delInfoGrade={dealInfo[0].grade}
-            dealInfoEarningRate={dealInfo[0].earningRate}
-            dealInfoRepaymentPeriod={dealInfo[0].repaymentPeriod}
-            dealInfoNetAmount={dealInfo[0].netAmount}
+            dealInfoName={dealInfo.name}
+            delInfoGrade={dealInfo.grade}
+            dealInfoEarningRate={dealInfo.earningRate}
+            dealInfoRepaymentPeriod={dealInfo.repaymentPeriod}
+            dealInfoNetAmount={dealInfo.netAmount}
           />
           <ContentWrap>
             <section>
               <Deal
-                mortgageInfoLatitude={mortgageInfo[0].latitude}
-                mortgageInfoLongitude={mortgageInfo[0].longitude}
-                mortgageInfoAddress={mortgageInfo[0].address}
-                mortgageCompletedDate={mortgageInfo[0].completedDate}
-                mortgageScale={mortgageInfo[0].scale}
-                mortSupplyArea={mortgageInfo[0].supplyArea}
-                mortFloor={mortgageInfo[0].floor}
-                mortEstimatedRecovery={mortgageInfo[0].estimatedRecovery}
-                mortSeniorLoanAmount={mortgageInfo[0].seniorLoanAmount}
-                dealInfocreditScore={dealInfo[0].creditScore}
-                dealInfoNetAmount={dealInfo[0].netAmount}
+                mortgageInfoLatitude={mortgageInfo.latitude}
+                mortgageInfoLongitude={mortgageInfo.longitude}
+                mortgageInfoAddress={mortgageInfo.address}
+                mortgageCompletedDate={mortgageInfo.completedDate}
+                mortgageScale={mortgageInfo.scale}
+                mortSupplyArea={mortgageInfo.supplyArea}
+                mortFloor={mortgageInfo.floor}
+                mortEstimatedRecovery={mortgageInfo.estimatedRecovery}
+                mortSeniorLoanAmount={mortgageInfo.seniorLoanAmount}
+                dealInfocreditScore={dealInfo.creditScore}
+                dealInfoNetAmount={dealInfo.netAmount}
               />
               <ControllerWrap
-                dealAmount={dealInfo[0].amount}
-                dealInvestmentOption={dealInfo[0].investmentOption}
-                dealDepositAmount={dealInfo[0].depositAmount}
-                dealRepaymentDay={dealInfo[0].repaymentDay}
+                dealAmount={dealInfo.amount}
+                dealInvestmentOption={dealInfo.investmentOption}
+                dealDepositAmount={dealInfo.depositAmount}
+                dealRepaymentDay={dealInfo.repaymentDay}
               />
             </section>
           </ContentWrap>
         </>
       )}
-    </main>
+    </Main>
   );
 };
 
@@ -75,4 +75,8 @@ const ContentWrap = styled.div`
     flex-direction: row;
     align-items: stretch;
   }
+`;
+
+const Main = styled.main`
+  padding-top: 150px;
 `;

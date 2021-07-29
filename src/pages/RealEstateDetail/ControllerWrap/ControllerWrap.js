@@ -6,7 +6,7 @@ function ControllerWrap(props) {
   const investmentOption = number => {
     let result = '';
     let array = [];
-    for (let i = 0; i < number.length; i++) {
+    for (let i = 0; i < number; i++) {
       result = number[i] / 10000;
       array.push(result);
     }

@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
-const TOTAL_SLIDES = 2;
-
-function Slide() {
+function Slide(props) {
+  const TOTAL_SLIDES = props.mortgageImage.length;
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRef = useRef(null);
   const nextSlide = () => {
@@ -34,20 +33,21 @@ function Slide() {
       <div className="carousel">
         <div className="carousel-slide">
           <ul ref={slideRef}>
-            <li>
-              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-            </li>
-            <li>
-              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-            </li>
-            <li>
-              <img src="https://cdn-media.8percent.kr/deal/7mNeTdhvF52d0J237jbPYPl0fDJUFj_Deal_page3.jpg" />
-            </li>
+            {props.mortgageImage &&
+              props.mortgageImage.map(items => {
+                return (
+                  <li>
+                    <img src={items} />
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>
       <div className="carusel-dim"></div>
-      <CarouselPage>{currentSlide + 1} / 3</CarouselPage>
+      <CarouselPage>
+        {currentSlide + 1} / {TOTAL_SLIDES + 1}
+      </CarouselPage>
       <CaruselBtnWrap>
         <button className="carousel-control left-btn" onClick={prevSlide}>
           <svg
