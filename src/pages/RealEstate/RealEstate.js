@@ -23,9 +23,11 @@ function RealEstate() {
   useEffect(() => {
     fetchData(
       MORTGAGE,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           setProgress(res.recruitingResults);
@@ -39,9 +41,11 @@ function RealEstate() {
 
     fetchData(
       `${MORTGAGE}&closed=true&offset=0&limit=8`,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           setClosed(res.results);
@@ -59,9 +63,11 @@ function RealEstate() {
 
     fetchData(
       `${MORTGAGE}&closed=true&offset=${queryObj.offset}&limit=8`,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           setTimeout(() => {
