@@ -13,7 +13,7 @@ function Overview() {
   const [portfolio, setPortfolio] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
 
-  useEffect(e => {
+  useEffect(() => {
     const requestOptions = {
       method: 'GET',
       headers: {
