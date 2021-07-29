@@ -6,36 +6,53 @@ import { getToken } from '../../utilities/token';
 
 function Apply(props) {
   const [applyInput, setApplyInput] = useState([]);
-  const [investmentLength, setInvestmentLength] = useState(0);
+  const [userInfo, setUserInfo] = useState({});
+
   const [checkedItem, setCheckedItem] = useState([]);
-  //console.log(applyInput);
+
+  console.log(applyInput);
   useEffect(() => {
-    //deleted
-    // localStorage.setItem(TOKEN_KEY, 'hhhhhhhhhhh');
     const authToken = getToken();
     fetch(`${INVESTMENTSINFO_API}${props.location.search}`, {
-      //props.location.search가 들어온다
       headers: {
         Authorization: authToken,
       },
     })
-      //.then(res => console.log(res));
       .then(res => res.json())
-      .then(res => setApplyInput(res.investInfo));
+      .then(res => {
+        setApplyInput(res.results.investInfo);
+        setUserInfo({
+          depositAccount: res.results.depositAccount,
+          depositAmount: res.results.depositAmount,
+          depositBank: res.results.depositBank,
+          name: res.results.name,
+        });
+      });
   }, []);
-  // 개별선택
+
+  //체크박스 전체 선택
+  const checkedAll = () => {
+    const allItmesId = applyInput.map(item => item.id);
+    allItmesId.length === checkedItem.length
+      ? setCheckedItem([])
+      : setCheckedItem(allItmesId);
+  };
+  console.log(checkedItem.length, applyInput.length);
+  // 체크박스 개별선택
   const handleCheckItem = (e, productId) => {
     if (e.target.checked) {
       setCheckedItem([...checkedItem, productId]);
     } else {
       setCheckedItem(checkedItem.filter(checkedId => checkedId !== productId));
     }
+    console.log(e, productId);
   };
 
-  //전체선택
-  // const { posts } = useSelector(state => state.sample);
+  const pushAccount = () => {
+    alert('투자가 완료 되었습니다.');
+    //history.push('/');
+  };
 
-  console.log();
   return (
     <Container>
       <Header>
@@ -47,7 +64,12 @@ function Apply(props) {
             <CardInput>
               <div>
                 <label>
-                  <input type="checkbox" name="allCheck" />
+                  <input
+                    type="checkbox"
+                    name="allCheck"
+                    checked={checkedItem.length === applyInput.length}
+                    onChange={checkedAll}
+                  />
                   <CheckAreaLabel>
                     <img
                       src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxNCAxMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+RjlCMzRFNUYtMzRDNS00RDcxLUFDNDYtNkRBQzBBNkUxRDlCPC90aXRsZT48cGF0aCBkPSJNMSA0LjgwOGw0LjAzNCAzLjkwNkwxMyAxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iI0ZGRiIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+"
@@ -57,49 +79,44 @@ function Apply(props) {
                   <CardInputLabelName>전체선택</CardInputLabelName>
                 </label>
               </div>
-              <SelectWrap>
+              {/* <SelectWrap>
                 <select className="form-control">
                   <option value="">금액 일괄 적용</option>
                 </select>
-              </SelectWrap>
+              </SelectWrap> */}
             </CardInput>
-            {[...Array(5)].map((el, idx) => (
-              <input
-                type="checkbox"
-                onChange={idx => handleCheckItem(idx)}
-                checked={checkedItem.includes(idx)}
-              />
-            ))}
-            {/* {applyInput &&
+            {applyInput &&
               applyInput.map((applyInput, idx) => (
                 <ApplyInput
+                  id={applyInput.id}
                   investName={applyInput.name}
                   investOption={applyInput.investmentOption}
                   investCategory={applyInput.category}
                   investGrade={applyInput.grade}
                   investEarningRate={applyInput.earningRate}
                   investRepaymentPeriod={applyInput.repaymentPeriod}
-                  //investCheckedItems={checkdItemHandler}
+                  HandleCheckItem={handleCheckItem}
+                  checkedItem={checkedItem}
                 />
-              ))} */}
+              ))}
           </CardHead>
           <Summary>
             <SummaryWrap>
               <SummaryWraplabel>투자 상품</SummaryWraplabel>
               {applyInput && (
                 <SummaryValue>
-                  총 {investmentLength}/{applyInput.length}건
+                  총 {checkedItem.length}/{applyInput.length}건
                 </SummaryValue>
               )}
             </SummaryWrap>
-            <SummaryWrap>
-              <SummaryWraplabel>총 투자 금액</SummaryWraplabel>
+            {/* <SummaryWrap>
+              <SummaryWraplabel>총 투자 괄련상품 가격</SummaryWraplabel>
               {applyInput && (
                 <SummaryValue className="acount">
                   {applyInput.amount}원
                 </SummaryValue>
               )}
-            </SummaryWrap>
+            </SummaryWrap> */}
           </Summary>
         </form>
       </Card>
@@ -109,18 +126,20 @@ function Apply(props) {
             <BalanceWrap>
               <Title>나의 예치금 잔액</Title>
               <div className="copiable-text">
-                농협은행 79018932489447 팔퍼센|장운서
+                {userInfo.depositAccount}
+                {userInfo.name}
+                {userInfo.depositBank}
               </div>
             </BalanceWrap>
             <BalanceWrap>
-              <p className="amount">0원</p>
+              <p className="amount">{userInfo.depositAmount}원</p>
             </BalanceWrap>
           </Balance>
           <Final>
             <Title>최종 투자 금액</Title>
             <FinalWrap>
               <p>총 투자 금액</p>
-              <p>원</p>
+              <p>{checkedItem.length * 10000}원</p>
             </FinalWrap>
             {/* <FinalWrap>
               <p className="fianl-label">사용 포인트</p>
@@ -140,12 +159,15 @@ function Apply(props) {
           </Final>
           <Total>
             <div>사용 예치금</div>
-            {applyInput && <TotalValue>{applyInput.amount}원</TotalValue>}
+            {/* {applyInput && <TotalValue>{applyInput.amount}원</TotalValue>} */}
+            <TotalValue>{checkedItem.length * 10000}원</TotalValue>
           </Total>
         </form>
       </Card>
       <BtnWrap>
-        <button type="button">투자 하기</button>
+        <button type="button" onClick={pushAccount}>
+          투자 하기
+        </button>
       </BtnWrap>
     </Container>
   );
@@ -322,7 +344,7 @@ const CardInput = styled.div`
   flex-direction: row;
   justify-content: space-between;
   border-bottom: 1px solid #dee2e5;
-  padding: 0 20px;
+  padding: 10px 20px;
   align-items: center;
 
   label {

@@ -3,8 +3,7 @@ import { ReactComponent as CheckImg } from './CheckImg.svg';
 import styled from 'styled-components';
 
 function ApplyInput(props) {
-  console.log(props.investName);
-  //console.log(props.investCheckedItems);
+  //console.log(props);
   return (
     <CardInput>
       <div className="checkable-area">
@@ -13,7 +12,8 @@ function ApplyInput(props) {
             type="checkbox"
             id="allControl"
             className="form-checkable"
-            onCange={e => props.investCheckedItems(e)}
+            onChange={e => props.HandleCheckItem(e, props.id)}
+            checked={props.checkedItem.includes(props.id)}
           />
           <CheckAreaLabel>
             <CheckImg />
@@ -31,10 +31,12 @@ function ApplyInput(props) {
       </div>
       <SelectWrap>
         <select className="form-control">
-          {props.investOption.map(investOption => (
+          {/* {props.investOption.map(investOption => (
             <option value={investOption}>{investOption}</option>
-          ))}
-          <option value="5000">0.5만원</option>
+          ))} */}
+          <option value="10000" selected>
+            만원
+          </option>
         </select>
       </SelectWrap>
     </CardInput>
