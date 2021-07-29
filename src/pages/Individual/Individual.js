@@ -139,7 +139,7 @@ function Individual() {
                 <IndividualItem
                   checkedItem={checkedItem}
                   setCheckedItem={setCheckedItem}
-                  data={item}
+                  individualItem={item}
                   key={i}
                 />
               ))

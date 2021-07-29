@@ -82,7 +82,7 @@ function MainSlide({ slide }) {
       >
         {slide.map((item, i) => (
           <MainSlideItem
-            data={item}
+            slide={item}
             key={i}
             bgIdx={
               (i === 0 && SLIDE_BG_COLOR.length - 1) ||

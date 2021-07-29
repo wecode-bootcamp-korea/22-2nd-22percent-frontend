@@ -5,38 +5,38 @@ import InvestedLabel from './InvestedLabel/InvestedLabel';
 
 import { isOverSeventy } from '../../../utilities/utils';
 
-function ProductItem({ data, inProgress, preArranged }) {
-  const [_year, month, date] = data.startDate.split('-');
+function ProductItem({ product, inProgress, preArranged }) {
+  const [_year, month, date] = product.startDate.split('-');
   const investmentAmount =
-    data.investmentAmount &&
-    Number(data.investmentAmount.toString().slice(0, -4)).toLocaleString();
+    product.investmentAmount &&
+    Number(product.investmentAmount.toString().slice(0, -4)).toLocaleString();
 
   return (
-    <Link to={`/deals/${data.index}`}>
+    <Link to={`/deals/${product.index}`}>
       <Item>
         <ImgContainer>
-          <img alt="real estate" src={data.titleImage} />
-          {data.invested && <InvestedLabel />}
+          <img alt="real estate" src={product.titleImage} />
+          {product.invested && <InvestedLabel />}
         </ImgContainer>
         <ItemInfo>
           {inProgress && (
             <ItemPercent
-              percent={data.progress}
-              isOverSeventy={isOverSeventy(data.progress)}
+              percent={product.progress}
+              isOverSeventy={isOverSeventy(product.progress)}
             >
               <PercentGraph
-                percent={data.progress}
-                isOverSeventy={isOverSeventy(data.progress)}
+                percent={product.progress}
+                isOverSeventy={isOverSeventy(product.progress)}
               ></PercentGraph>
-              <span>{data.progress}% 모집</span>
+              <span>{product.progress}% 모집</span>
             </ItemPercent>
           )}
-          <p>{data.title}</p>
+          <p>{product.title}</p>
           <ItemNotice>
-            <b>{Number(data.earningRate).toFixed(1)}%</b>
+            <b>{Number(product.earningRate).toFixed(1)}%</b>
             {inProgress && (
               <span>
-                {data.period}개월· {investmentAmount}만원 모집
+                {product.period}개월· {investmentAmount}만원 모집
               </span>
             )}
           </ItemNotice>
