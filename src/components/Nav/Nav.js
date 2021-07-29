@@ -9,7 +9,12 @@ import SignIn from './SignIn/SignIn';
 import { DEALS } from './SubNav/navTabList';
 import { getToken } from '../../utilities/token';
 
-const NEED_SUBNAV_PATH = ['deals', 'mypage'];
+const NEED_SUBNAV_PATH = [
+  '/deals/real-estate',
+  '/deals/individual',
+  '/mypage/overview',
+  '/mypage/history',
+];
 
 function Nav() {
   const [isValidUser, setIsValidUser] = useState(false);
@@ -21,9 +26,10 @@ function Nav() {
     setIsValidUser(getToken());
   });
 
-  const isSubNavOn = NEED_SUBNAV_PATH.some(pathname =>
-    location.pathname.includes(pathname)
+  const isSubNavOn = NEED_SUBNAV_PATH.some(
+    pathname => location.pathname === pathname
   );
+  console.log(location.pathname);
 
   const goToPage = pathname => history.push(pathname);
   const [realEstate] = DEALS;
