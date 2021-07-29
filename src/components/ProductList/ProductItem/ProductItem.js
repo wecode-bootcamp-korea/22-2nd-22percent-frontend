@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import InvestedLabel from './InvestedLabel/InvestedLabel';
 
 import { isOverSeventy } from '../../../utilities/utils';
 
@@ -15,6 +16,7 @@ function ProductItem({ data, inProgress, preArranged }) {
       <Item>
         <ImgContainer>
           <img alt="real estate" src={data.titleImage} />
+          {data.invested && <InvestedLabel />}
         </ImgContainer>
         <ItemInfo>
           {inProgress && (
@@ -57,6 +59,7 @@ const Item = styled.li`
 `;
 
 const ImgContainer = styled.div`
+  position: relative;
   margin-bottom: 20px;
   border-radius: 10px;
   height: 300px;
