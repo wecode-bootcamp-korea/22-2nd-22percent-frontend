@@ -39,7 +39,7 @@ function Nav() {
       <NavBar>
         <InnerBox>
           <Divider>
-            <Logo onClick={() => goToPage('/')}>8PERCENT</Logo>
+            <Logo onClick={() => goToPage('/')}>22PERCENT</Logo>
             <List>
               <li
                 onClick={() =>
