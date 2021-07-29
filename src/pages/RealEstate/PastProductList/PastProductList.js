@@ -6,11 +6,17 @@ import PastProductItem from './PastProductItem/PastProductItem';
 
 import { stringToQuery } from '../../../utilities/query';
 
-function PastProductList({ closed, fetchClosed, closedQuantity }) {
+function PastProductList({
+  closed,
+  fetchClosed,
+  closedQuantity,
+  setIsLoading,
+}) {
   const history = useHistory();
   const queryObj = stringToQuery(history.location.search);
 
   const handleViewMore = () => {
+    setIsLoading(true);
     history.push(`?closed=true&offset=${Number(queryObj.offset) + 8}&limit=8`);
     fetchClosed();
   };

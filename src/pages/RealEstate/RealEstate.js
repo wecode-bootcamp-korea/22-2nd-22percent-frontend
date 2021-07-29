@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import ProductList from '../../components/ProductList/ProductList';
 import PastProductList from './PastProductList/PastProductList';
+import Loading from '../../components/Loading/Loading';
 
 import { MORTGAGE } from '../../config';
 import { stringToQuery } from '../../utilities/query';
@@ -15,6 +16,7 @@ function RealEstate() {
   const [scheduled, setScheduled] = useState(null);
   const [closed, setClosed] = useState(null);
   const [closedQuantity, setClosedQuantity] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
 
@@ -62,8 +64,11 @@ function RealEstate() {
       },
       {
         onSuccess: res => {
-          Number(queryObj.offset !== 0) &&
-            setClosed(prev => [...prev, ...res.results]);
+          setTimeout(() => {
+            Number(queryObj.offset !== 0) &&
+              setClosed(prev => [...prev, ...res.results]);
+            setIsLoading(false);
+          }, 1500);
         },
         onReject: res => {
           alert(res);
@@ -98,8 +103,10 @@ function RealEstate() {
             setClosed={setClosed}
             closedQuantity={closedQuantity}
             fetchClosed={fetchClosed}
+            setIsLoading={setIsLoading}
           />
         )}
+        {isLoading && <Loading />}
       </Inner>
     </Container>
   );
@@ -114,6 +121,7 @@ const Container = styled.main`
 `;
 
 const Inner = styled.div`
+  position: relative;
   width: 65%;
 `;
 
