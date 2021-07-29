@@ -39,9 +39,11 @@ function Individual() {
   useEffect(() => {
     fetchData(
       INDIVIDUAL,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           setIndividual(res.results);

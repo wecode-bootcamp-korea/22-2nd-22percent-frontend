@@ -22,9 +22,11 @@ function Main() {
   useEffect(() => {
     fetchData(
       MORTGAGE,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           setProgress(res.recruitingResults);
@@ -48,9 +50,11 @@ function Main() {
     setToday({ year, month: month + 1, date });
     fetchData(
       LOAN_AMOUNT,
-      {
-        headers: { Authorization: getToken() },
-      },
+      getToken()
+        ? {
+            headers: { Authorization: getToken() },
+          }
+        : null,
       {
         onSuccess: res => {
           const { loanAcc, avgPerPerson, investAcc } = res.result;
