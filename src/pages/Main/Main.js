@@ -7,6 +7,8 @@ import AccBox from './AccBox/AccBox';
 
 import { LOAN_AMOUNT, MORTGAGE } from '../../config';
 import { getToken } from '../../utilities/token';
+import { SLIDE_BG_COLOR } from './MainSlide/slideBgColor';
+import { isValidObject } from '../../utilities/utils';
 import fetchData from '../../utilities/fetch';
 
 function Main() {

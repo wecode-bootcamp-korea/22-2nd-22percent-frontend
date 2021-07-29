@@ -2,13 +2,13 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { TOKEN_KEY } from '../../../utilities/token';
+import { removeToken } from '../../../utilities/token';
 
 function SignIn() {
   const history = useHistory();
 
   const handleLogout = () => {
-    localStorage.removeItem(TOKEN_KEY);
+    removeToken();
     history.push('/');
   };
 
