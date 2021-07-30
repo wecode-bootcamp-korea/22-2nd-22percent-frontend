@@ -26,7 +26,6 @@ function DealHeader(props) {
   };
   const dealInfoNetAmount = numberToKorean(props.dealInfoNetAmount);
 
-  console.log(props);
   return (
     <DealWrap>
       <DealHeaderGrid>

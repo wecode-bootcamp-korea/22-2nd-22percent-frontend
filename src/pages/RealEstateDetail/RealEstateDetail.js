@@ -11,13 +11,12 @@ const RealEstateDetail = ({ match }) => {
   const [dealInfo, setDealInfo] = useState(null);
   const [mortgageInfo, setMortgageInfo] = useState(null);
 
-  console.log(match.params.id);
-
   useEffect(() => {
     fetch(`${REALESTATEDETAIL}${match.params.id}`)
       .then(res => res.json())
       .then(res => {
         // 데이터 분기 처리
+        console.log(res);
         setDealInfo(res.dealInfo);
         setMortgageInfo(res.mortgageInfo);
       });
@@ -54,6 +53,7 @@ const RealEstateDetail = ({ match }) => {
                 dealInvestmentOption={dealInfo.investmentOption}
                 dealDepositAmount={dealInfo.depositAmount}
                 dealRepaymentDay={dealInfo.repaymentDay}
+                productId={match.params.id}
               />
             </section>
           </ContentWrap>
