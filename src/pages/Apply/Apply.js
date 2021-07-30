@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useSelector } from 'react';
 import styled from 'styled-components';
 import ApplyInput from './ApplyInput/ApplyInput';
-import { INVESTMENTSINFO_API } from '../../config';
+import { INVESTMENTSINFO_API, BASE_URL } from '../../config';
 import { getToken } from '../../utilities/token';
 
 function Apply(props) {
@@ -10,7 +10,6 @@ function Apply(props) {
 
   const [checkedItem, setCheckedItem] = useState([]);
 
-  console.log(applyInput);
   useEffect(() => {
     const authToken = getToken();
     fetch(`${INVESTMENTSINFO_API}${props.location.search}`, {
@@ -29,7 +28,6 @@ function Apply(props) {
         });
       });
   }, []);
-
   //체크박스 전체 선택
   const checkedAll = () => {
     const allItmesId = applyInput.map(item => item.id);
@@ -37,7 +35,6 @@ function Apply(props) {
       ? setCheckedItem([])
       : setCheckedItem(allItmesId);
   };
-  console.log(checkedItem.length, applyInput.length);
   // 체크박스 개별선택
   const handleCheckItem = (e, productId) => {
     if (e.target.checked) {
@@ -45,10 +42,23 @@ function Apply(props) {
     } else {
       setCheckedItem(checkedItem.filter(checkedId => checkedId !== productId));
     }
-    console.log(e, productId);
   };
 
   const pushAccount = () => {
+    const authToken = getToken();
+    const productInvestments = applyInput.map(el => ({
+      id: el.id,
+      amount: 10000,
+    }));
+    fetch(`${BASE_URL}/investments`, {
+      method: 'POST',
+      headers: {
+        Authorization: authToken,
+      },
+      body: JSON.stringify({
+        investments: productInvestments,
+      }),
+    });
     alert('투자가 완료 되었습니다.');
     //history.push('/');
   };

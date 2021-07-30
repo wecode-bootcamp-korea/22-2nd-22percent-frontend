@@ -1,8 +1,11 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { REALESTATEDETAIL, BASE_URL } from '../../../config';
 
 function ControllerWrap(props) {
+  const [options, setOptions] = useState(null);
+  const [select, setSelect] = useState('5000');
   const investmentOption = number => {
     let result = '';
     let array = [];
@@ -15,8 +18,22 @@ function ControllerWrap(props) {
   };
 
   const investment = investmentOption(props.dealInvestmentOption);
+  const location = useLocation();
+  const [_, __, productAccountInfo] = location.pathname.split(`/`);
+  console.log(productAccountInfo);
   const history = useHistory();
   const goToInvestmentPage = pathname => history.push(pathname);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/deals/${productAccountInfo}/payback`)
+      .then(res => res.json())
+      .then(res => setOptions(res.results));
+  }, []);
+
+  const handleSetSelect = e => {
+    setSelect(e.target.value);
+  };
+
   return (
     <Controller>
       <form>
@@ -33,40 +50,62 @@ function ControllerWrap(props) {
               <span>0 P</span>
             </div>
           </div>
-          <SelectWrap>
-            <select id="select-lg" className="form-control">
-              {investment.map(investment => (
-                <option>{investment}만원</option>
-              ))}
-            </select>
-          </SelectWrap>
+          {options && (
+            <SelectWrap>
+              <select
+                id="select-lg"
+                className="form-control"
+                onChange={e => handleSetSelect(e)}
+              >
+                {Object.keys(options.options).map(option => (
+                  <option value={option}>{option}원</option>
+                ))}
+              </select>
+            </SelectWrap>
+          )}
+
           <Bar />
-          <ControllerEarning>
-            <div className="group">
-              <p className="big-label">예상 지급금</p>
-              <p className="amount">53,230원</p>
-            </div>
-            <div className="earning-list">
-              <ul>
-                <li>
-                  <span className="label">이자</span>
-                  <span className="amount">4,456d원</span>
-                </li>
-                <li>
-                  <span className="label">세금</span>
-                  <span className="amount">4,456d원</span>
-                </li>
-                <li>
-                  <span className="label">이용료</span>
-                  <span className="amount">4,456d원</span>
-                </li>
-              </ul>
-            </div>
-          </ControllerEarning>
+          {options && (
+            <ControllerEarning>
+              <div className="group">
+                <p className="big-label">예상 지급금</p>
+                <p className="amount">
+                  {options.options[select].realityPrice}원
+                </p>
+              </div>
+              <div className="earning-list">
+                <ul>
+                  <li>
+                    <span className="label">이자</span>
+                    <span className="amount">
+                      {options.options[select].interest}원
+                    </span>
+                  </li>
+                  <li>
+                    <span className="label">세금</span>
+                    <span className="amount">
+                      {options.options[select].tax}원
+                    </span>
+                  </li>
+                  <li>
+                    <span className="label">이용료</span>
+                    <span className="amount">
+                      {options.options[select].commission}원
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </ControllerEarning>
+          )}
+
           <ButtonPriority>
             <button
               className="btn btn-priority btn-md"
-              onClick={() => goToInvestmentPage(`/investments/apply`)}
+              onClick={() =>
+                goToInvestmentPage(
+                  `/investments/apply?deals=${props.productId}`
+                )
+              }
             >
               투자하기
             </button>
